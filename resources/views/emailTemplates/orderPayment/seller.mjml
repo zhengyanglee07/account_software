@@ -1,0 +1,362 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-size="16px"/>
+        </mj-attributes>
+          <mj-style>
+          li{
+              list-style:none;
+          }
+          /*
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media
+only screen and (max-width: 760px) {
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	td {
+		/* Behave  like a "row" */
+		border: none;
+		position: relative;
+        width:auto;
+	}
+
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+
+    .hyper-logo{
+        width:200px;
+    }
+
+    .customize-charge{
+        color:grey;
+    }
+}
+</mj-style>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-group>
+            <mj-column width="100%">
+                <mj-group width="100%">
+                    <mj-column width="100%">
+                        <mj-text>
+                            <h3 style="margin: 0">New Order ! #{{ $order->order_number }}</h3>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+
+                <mj-group width="100%">
+                    <mj-column width="55%">
+                        <mj-text>
+                            <h3 style="margin-top: 0;">Order summary</h3>
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="45%">
+                        <mj-button
+                           href="{{ rtrim(config('app.url'), '/') }}/orders/details/{{ $order->reference_key }}"
+                           target="_blank"
+                           background-color="#ff9900"
+                           align="right"
+                           padding="8px 11px"
+                           width="140px"
+                        >
+                            View order
+                        </mj-button>
+                    </mj-column>
+                </mj-group>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+                <mj-text align="right" color="grey">
+                @php
+                    $check = 0;
+                @endphp
+                @foreach($order->orderDetails as $value)
+                    @if($value->is_taxable)
+                        @php
+                            $check ++;
+                        @endphp
+                    @endif
+                @endforeach
+
+
+                @if( $check > 0 )
+                    Product(s) with <span style="color:red">*</span> is taxable product
+                @endif
+                </mj-text>
+
+                    <mj-table cellpadding="5">
+                    @foreach($order->orderDetails as $orderDetail)
+                    @if ($orderDetail)
+                    <tr >
+                        <td>
+                            @if(app()->environment() === "local")
+                            <img src="{{config('app.url')}}{{$orderDetail->image_url}}" width="50px" height="50px"></img>
+                            @else
+                            <img src="{{$orderDetail->image_url}}" width="50px" height="50px"></img>
+                            @endif
+                        </td>
+                        <td style="width: 300px;">
+                        @inject('CurrencyHelper', 'App\Helpers\CurrencyHelper')
+                        <li style="font-weight:bold">{{ $orderDetail->product_name }}
+                         @if($orderDetail->is_taxable)
+                            <span style="color:red"> *</span>
+                        @endif
+                        </li>
+                       @forelse(json_decode($orderDetail->variant) ?? [] as $variant)
+                            <li>{{$variant->label}} : {{$variant->value}}</li>
+                        @empty
+                        @endforelse
+
+                        @forelse(json_decode($orderDetail->customization) ?? [] as $customization)
+                            @if($customization != null)
+                                <li>{{$customization->label}} :
+                                @foreach($customization->values as $value)
+                                    <span>{{$value->value_label}}</span>
+                                    @if($value->single_charge != 0)
+                                    <span style="color:grey">
+                                    (+{{ $order->prefix }} {{$CurrencyHelper->priceFormater($value->single_charge ,$order->currency, $order->account_id)}})
+                                    </span>
+                                    @endif
+                                    <span>{{ ($loop->index + 1 < count($customization->values)) ? ', ' : '' }}</span>
+                                @endforeach
+                                @if($customization->is_total_charge && $customization->total_charge_amount != 0)
+                                    <span style="color:grey">(+{{ $order->prefix }} {{$CurrencyHelper->priceFormater($customization->total_charge_amount, $order->currency, $order->account_id)}})</span>
+                                @endif
+                                </li>
+                            @endif
+                        @empty
+                        @endforelse
+                        @if($orderDetail->is_discount_applied)
+                            @if($orderDetail->discount_details !== null && json_decode($orderDetail->discount_details) !== [] )
+                            <li>Discount : {{json_decode($orderDetail->discount_details,false)->promotion->display_name}}</li>
+                            @endif
+                        @endif
+                        </td>
+                        <td align="right"> x {{ floor($orderDetail->quantity) }}</td>
+                        @if($orderDetail->is_discount_applied)
+                             <td align="right" >
+                                <p style="text-decoration:line-through">{{ $order->prefix }} {{ $CurrencyHelper->priceFormater($orderDetail->total, $order->currency, $order->account_id) }}</p>
+                                <p>{{ $order->prefix}} {{$CurrencyHelper->priceFormater((floatVal($orderDetail->total) - ($orderDetail->discount/100)),$order->currency,  $order->account_id)}}</p>
+                             </td>
+                        @else
+                              <td align="right" >
+                                <p>{{ $order->prefix }} {{ $CurrencyHelper->priceFormater($orderDetail->total, $order->currency,  $order->account_id) }}</p>
+                             </td>
+                        @endif
+                    </tr>
+                    @endif
+                    @endforeach
+                </mj-table>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+
+              <mj-group width="100%">
+                 <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                        @foreach($order->orderDiscount as $key => $discount)
+                            @if($discount->promotion_category !== 'Product')
+                            <p>Discount <span >( {{$discount->display_name}} )</span></p>
+                            @endif
+                        @endforeach
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                    @foreach($order->orderDiscount as $discount)
+                       @if($discount->promotion_category !== 'Product')
+                            <p>-{{ $order->prefix }} {{ $CurrencyHelper->priceFormater($discount->discount_value / 100, $order->currency, $order->account_id) }}</p>
+                       @endif
+                    @endforeach
+                        </mj-text>
+                    </mj-column>
+                   <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                         @if($order->shipping != 0 || $order->taxes != 0)
+                            <p>Subtotal
+                            @if($order->is_product_include_tax)
+                            <span>(Tax inclusive)</span>
+                            @endif
+                            </p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                        @if($order->shipping != 0 || $order->taxes != 0)
+                            <p>{{ $order->prefix }} {{ $CurrencyHelper->priceFormater($order->subtotal, $order->currency, $order->account_id) }}</p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+                    <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                         @if($order->shipping != 0 )
+                            <p>Shipping
+                            @if($order->is_shipping_fee_taxable)
+                                <span>(Shipping tax applied)</span>
+                            @endif
+                            </p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                        @if($order->shipping != 0 )
+                            <p>{{ $order->prefix }} {{  $CurrencyHelper->priceFormater($order->shipping, $order->currency, $order->account_id) }}</p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+
+					  <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                           @if($order->taxes != 0)
+                            <p>Tax ({{$order->tax_name}} {{$order->tax_rate}}%)   </p>
+                           @endif
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                         @if($order->taxes != 0)
+                            <p>
+                                 {{ $order->prefix }} {{  $CurrencyHelper->priceFormater($order->taxes, $order->currency, $order->account_id) }}
+                            </p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+                    <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                            @if($order->used_credit_amount != 0)
+                                <p>Store Credit Used</p>
+                            @endif
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                         @if($order->used_credit_amount != 0)
+                            <p>-{{ $order->prefix }} {{ $CurrencyHelper->priceFormater($order->used_credit_amount/100,$order->currency, $order->account_id) }}</p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+                    <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                            @if($order->cashback_amount != 0)
+                                <p>Cashback</p>
+                            @endif
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right" padding="0px 35px">
+                         @if($order->cashback_amount != 0)
+                            <p>{{ $order->prefix }} {{  $CurrencyHelper->priceFormater($order->cashback_amount/100,$order->currency, $order->account_id) }}</p>
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+                    <mj-column width="50%">
+                        <mj-text color="grey" align="right" padding="0px">
+                            <p>Total</p>
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="50%">
+                        <mj-text align="right"  padding="0px 35px">
+                            <p>
+                               {{ $order->prefix }} {{ $CurrencyHelper->priceFormater($order->total, $order->currency, $order->account_id) }}
+                            </p>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+                <mj-section  padding="0px">
+                  <mj-column>
+                        <mj-text>
+                            @if($order->delivery_hour_type == 'custom')
+                                <span style="font-weight:700"> Scheduled {{ucwords($order->delivery_type)}} </span><br/><br/>
+                                <span > Date : {{$order->delivery_date}} </span><br/><br/>
+                                <span> Time : {{$order->delivery_timeslot}}</span>
+                            @endif
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+                <mj-text><h3>Customer information</h3></mj-text>
+
+                <mj-section padding="0px">
+                    @if($order->delivery_type !== 'pickup')
+                        <mj-column>
+                            <mj-text font-weight="700">Shipping address</mj-text>
+                            <mj-text>{{ $order->shipping_name }}</mj-text>
+                            <mj-text>{{ $order->shipping_address }}</mj-text>
+                            <mj-text>{{ $order->shipping_city }}, {{ $order->shipping_state }}</mj-text>
+                            <mj-text>{{ $order->shipping_zipcode }}</mj-text>
+                            <mj-text>{{ $order->shipping_country }}</mj-text>
+                        </mj-column>
+                    @endif
+                    <mj-column>
+                        <mj-text font-weight="700">Billing address</mj-text>
+                        <mj-text>{{ $order->billing_name }}</mj-text>
+                        <mj-text>{{ $order->billing_address }}</mj-text>
+                        <mj-text>{{ $order->billing_city }}, {{ $order->billing_state }}</mj-text>
+                        <mj-text>{{ $order->billing_zipcode }}</mj-text>
+                        <mj-text>{{ $order->billing_country }}</mj-text>
+                    </mj-column>
+                </mj-section>
+
+                <mj-group width="100%">
+                    <mj-column width="50%">
+                        <mj-text><h3>Payment method</h3></mj-text>
+                        <mj-text padding-top="0px">
+                            <span style="color: grey">{{ $order->payment_method }}</span>
+                            - <span
+                            style="font-weight: bold">{{ $order->currency }} {{ $order->paided_by_customer}}</span>
+                        </mj-text>
+                    </mj-column>
+                    @if($order->shipping_method != null )
+                    <mj-column width="50%" align="right">
+                        <mj-text><h3>Shipping method</h3></mj-text>
+                        <mj-text padding-top="0px">
+                            <span style="color: grey">{{$order->shipping_method}}</span>
+
+                        </mj-text>
+                    </mj-column>
+                    @endif
+                </mj-group>
+
+                <mj-image
+                    class="hyper-logo"
+                    width="168px"
+                    padding="40px 25px"
+                    src="https://media.hypershapes.com/images/email-affiliate-badge.png"
+                    alt="hyper-logo"
+                    href="https://hypershapes.com">
+                </mj-image>
+            </mj-column>
+            </mj-group>
+        </mj-section>
+    </mj-body>
+</mjml>

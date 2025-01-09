@@ -1,0 +1,154 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-size="16px"/>
+        </mj-attributes>
+          <mj-style>
+          * {
+            background: white;
+          }
+
+          p, span, b, a, th, td {
+            font-size: 12px;
+            font-family: 'Roboto', sans-serif;
+          }
+
+          h1, h2, h3, h4, h5, h6, p, a {
+            margin: 3px 0;
+          }
+
+            .table tr td,
+            .table tr th {
+                padding: 3px 7.55px;
+                border: 1px solid #d8d8d8;
+                font-size: 12px;
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .table th,
+            .table tr:not(:nth-child(2)) td {
+                background: #e8e8e8;
+            }
+
+            .table tr td:last-child {
+                text-align: right;
+            }
+
+            .table th {
+                text-align: center;
+            }
+
+            .table td {
+                text-align: left;
+            }
+                
+          </mj-style>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-group>
+                <mj-column width="50%">
+                    <mj-image
+                        width="168px"
+                        padding="10px 0 0 27px"
+                        align="left"
+                        src="https://media.hypershapes.com/media/cny-20-group-photo_1623811592.webp"
+                        alt="hyper-logo"
+                        href="https://media.hypershapes.com/media/cny-20-group-photo_1623811592.webp"
+                    >
+                    </mj-image>
+                </mj-column width="50%">
+                <mj-column>
+                    <mj-text align="right">
+                        <p>{{Hypershapes company name}}</p>
+                        <p>{{Addresses}}</p>
+                        <p>Street, Town, City</p>
+                        <p>ZipCode State</p>
+                        <p>Country</p>
+                        <p>{{contact info}}</p>
+                    </mj-text>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+        
+        <mj-section>
+            <mj-column width="100%">
+                <mj-text align="center" font-size="20px">
+                    Invoice / Receipt
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <mj-section>
+            <mj-group>
+                <mj-column width="55%">
+                    <mj-text>
+                        <b>Invoiced To:</b>
+                        <p>{{Subscriber first name + last name}}</p>
+                        <p>{{Company Name}}</p>
+                        <p>{{Addresses}}</p>
+                        <p>Street, Town, City</p>
+                        <p>ZipCode State</p>
+                        <p>Country</p>
+                    </mj-text>
+                </mj-column>
+                <mj-column width="45%">
+                    <mj-text align="right">
+                        <b style="margin: 0">Invoice Number : {{Invoice Number}}</b>
+                        <p>Invoice Date: {{12 December 2021 (Invoice Date)}}</p>
+                    </mj-text>
+                </mj-column>
+
+                <!-- Plan summary table -->
+                <mj-column width="100%">
+                    <mj-table width="100%" css-class="table">
+                        <tr>
+                            <th>Plan</th>
+                            <th>Start Date</th>
+                            <th>Start Date</th>
+                            <th>Unit</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td>{{Plan Name}}</td>
+                            <td>{{Plan Start Date}}</td>
+                            <td>{{Plan End Date}}</td>
+                            <td style="text-align: center;">{{Quantity}}</td>
+                            <td>{{Plan total in MYR}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: right">Sub Total</td>
+                            <td>{{Plan total in MYR}} * Unit</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount Paid</td>
+                            <td style="font-weight: bold;">{{Sum of Sub Total}}</td>
+                        </tr>
+                    </mj-table>
+                </mj-column>
+
+                <!-- Payment Method -->
+                <mj-column width="100%">
+                    <mj-table width="100%" css-class="table">
+                        <tr>
+                            <th>Payment Method</th>
+                            <th>Transaction ID</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{Payment Method}}</td>
+                            <td style="text-align: center;">{{Transaction ID}}</td>
+                        </tr>
+                    </mj-table>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+        
+        <!-- <mj-section>
+            <mj-column width="100%">
+                <mj-text align="center">
+                    <p>Footer </p>
+                </mj-text>
+            </mj-column>
+        </mj-section> -->
+    </mj-body>
+</mjml>

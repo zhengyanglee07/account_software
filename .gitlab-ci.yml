@@ -1,0 +1,46 @@
+stages:
+ - build
+ - test
+ - deploy
+ - chatOps
+
+.composer:
+ stage: build
+ script:
+  - echo "-- Start installing dependencies --"
+  - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts -q -o
+ artifacts:
+  paths:
+    - vendor/
+  expire_in: 1 week
+ only:
+  - main
+
+.phpunit:
+ stage: test
+ script:
+  - echo "-- Start Testing --"
+  - cp .env.testing.example .env.testing
+  - php artisan test --env=testing
+ only:
+  - main
+
+.deploy-staging:
+ stage: deploy
+ script:
+  - echo "-- Start envoy deployment --"
+  - php vendor/bin/envoy run deploy-staging
+ only:
+  - main
+
+.switch-staging:
+ stage: chatOps
+ only: [chat]
+ script:
+  - echo "-- Start installing dependencies --"
+  - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts -q -o
+  - echo "-- Start ChatOps Job --"
+  - php vendor/bin/envoy run switch-staging --branch=$CHAT_INPUT
+  - echo -e "section_start:$( date +%s ):chat_reply\r\e[0K"
+  - echo "Successfull switched to ${CHAT_INPUT} branch in staging"
+  - echo -e "section_end:$( date +%s ):chat_reply\r\e[0K"

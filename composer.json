@@ -1,0 +1,112 @@
+{
+    "name": "hypershapes/hypershapes",
+    "type": "project",
+    "description": "All in one marketing tool",
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "aws/aws-php-sns-message-validator": "^1.7",
+        "aws/aws-sdk-php": "^3.231",
+        "aws/aws-sdk-php-laravel": "~3.0",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "doctrine/dbal": "^3.0",
+        "facebook/php-business-sdk": "3.1.*",
+        "google/apiclient": "^2.4",
+        "google/auth": "^1.6",
+        "guzzlehttp/guzzle": "^7.4",
+        "guzzlehttp/oauth-subscriber": "0.6.*",
+        "hashids/hashids": "^4.0",
+        "hedii/laravel-gelf-logger": "^8.0",
+        "inertiajs/inertia-laravel": "^0.6.9",
+        "intervention/image": "^2.6",
+        "jdavidbakr/mail-tracker": "^7.0",
+        "kalnoy/nestedset": "^6.0",
+        "laravel/framework": "^10.0",
+        "laravel/horizon": "^5.12",
+        "laravel/legacy-factories": "^1.1",
+        "laravel/sanctum": "^3.2",
+        "laravel/slack-notification-channel": "^2.5",
+        "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.2",
+        "maatwebsite/excel": "^3.1",
+        "predis/predis": "^1.1",
+        "pusher/pusher-php-server": "~7.2",
+        "rap2hpoutre/laravel-log-viewer": "^2.3",
+        "sentry/sentry-laravel": "^3.2",
+        "spatie/laravel-sitemap": "^6.2",
+        "stripe/stripe-php": "^7.32",
+        "symfony/http-client": "^6.0",
+        "symfony/postmark-mailer": "^6.0",
+        "symfony/var-dumper": "^6.0"
+    },
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
+        "barryvdh/laravel-ide-helper": "^2.13",
+        "beyondcode/laravel-dump-server": "^1.9",
+        "brianium/paratest": "^7.2",
+        "fakerphp/faker": "^1.21",
+        "filp/whoops": "^2.0",
+        "laravel/envoy": "^2.8",
+        "laravel/sail": "^1.23",
+        "laravel/telescope": "^4.12",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^7.0",
+        "pestphp/pest": "^2.8",
+        "phpunit/phpunit": "^10.0",
+        "spatie/laravel-ignition": "^2.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "php-http/discovery": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "laravel/telescope"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "app/Helpers/PermissionHelper.php",
+            "app/Helpers/CurrencyHelper.php",
+            "app/Helpers/HttpHelper.php",
+            "app/Helpers/IPAddressHelper.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta"
+        ]
+    }
+}

@@ -1,0 +1,208 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-size="16px"/>
+        </mj-attributes>
+          <mj-style>
+          li{
+              list-style:none;
+          }
+
+          @media
+                only screen and (max-width: 760px) {
+
+                    /* Force table to not be like tables anymore */
+                    table, thead, tbody, th, td, tr {
+                        display: block;
+                    }
+                    /* Hide table headers (but not display: none;, for accessibility) */
+                    thead tr {
+                        position: absolute;
+                        top: -9999px;
+                        left: -9999px;
+                    }
+
+                    td {
+                        /* Behave  like a "row" */
+                        border: none;
+                        position: relative;
+                        width:auto;
+                    }
+
+                    td:before {
+                        /* Now like a table header */
+                        position: absolute;
+                        /* Top/left values mimic padding */
+                        top: 6px;
+                        left: 6px;
+                        width: 45%;
+                        padding-right: 10px;
+                        white-space: nowrap;
+                    }
+
+                    .hyper-logo{
+                        width:200px;
+                    }
+                }
+          </mj-style>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-group>
+            <mj-column width="100%">
+                <mj-group width="100%">
+                    <mj-column width="55%">
+                        <mj-text>
+                            <h3 style="margin: 0">Your order has been shipped !</h3>
+                        </mj-text>
+                    </mj-column>
+                    <mj-column width="45%">
+                        <mj-text color="grey" font-size="17px" align="right">
+                            <p style="margin: 0">ORDER {{ $emailData['fulfillmentNumber'] }}</p>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+
+                <mj-text><h3>Shipped items</h3></mj-text>
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+                <mj-text align="right" color="grey">
+                @php
+                    $check = 0;
+                @endphp
+                @foreach($emailData['fulfillOrderDetails'] as $value)
+                    @if($value->is_taxable)
+                        @php
+                            $check ++;
+                        @endphp
+                    @endif
+                @endforeach
+
+                @if($check > 0)
+                    Product(s) with <span style="color:red">*</span> is taxable product
+                @endif
+                </mj-text>
+                <mj-table cellpadding="5">
+                    @foreach($emailData['fulfillOrderDetails'] as $orderDetail)
+                    @if ($orderDetail)
+                    <tr >
+                        <td>
+                            @if(app()->environment() === "local")
+                            <img src="{{config('app.url')}}{{$orderDetail->image_url}}" width="50px" height="50px"></img>
+                            @else
+                            <img src="{{$orderDetail->image_url}}" width="50px" height="50px"></img>
+                            @endif
+                        </td>
+                        <td style="width: 300px;">
+                        <li style="font-weight:bold">{{ $orderDetail->product_name }}
+                         @if($orderDetail->is_taxable)
+                            <span style="color:red"> *</span>
+                        @endif
+                        </li>
+                       @forelse(json_decode($orderDetail->variant) ?? [] as $variant)
+                            <li>{{$variant->label}} : {{$variant->value}}</li>
+                        @empty
+                        @endforelse
+
+                        @forelse(json_decode($orderDetail->customization) ?? [] as $customization)
+                            @if($customization != null)
+                                <li>{{$customization->label}} :
+                                @foreach($customization->values as $value)
+                                    <span>{{$value->value_label}}</span>
+                                    @if($value->single_charge != 0)
+                                    <span style="color:grey">
+                                    (+{{ $order->currency }} {{$value->single_charge}})
+                                    </span>
+                                    @endif
+                                    <span>{{ ($loop->index + 1 < count($customization->values)) ? ', ' : '' }}</span>
+                                @endforeach
+                                @if($customization->is_total_charge && $customization->total_charge_amount != 0)
+                                    <span style="color:grey">(+{{ $order->currency }} {{$customization->total_charge_amount}})</span>
+                                @endif
+                                </li>
+                            @endif
+                        @empty
+                        @endforelse
+                        @if($orderDetail->is_discount_applied)
+                            @if($orderDetail->discount_details !== null && json_decode($orderDetail->discount_details) !== [] )
+                            <li>Discount : {{json_decode($orderDetail->discount_details,false)->promotion->display_name}}</li>
+                            @endif
+                        @endif
+                        </td>
+                        <td align="right"> x {{ floor($orderDetail->quantity) }}</td>
+                        @if($orderDetail->is_discount_applied)
+                             <td align="right" >
+                                <p style="text-decoration:line-through">{{ $order->currency }} {{ $orderDetail->total }}</p>
+                                <p>{{ $order->currency}} {{number_format((floatVal($orderDetail->total) - ($orderDetail->discount/100)),2)}}</p>
+                             </td>
+                        @else
+                              <td align="right" >
+                                <p>{{ $order->currency }} {{ $orderDetail->total }}</p>
+                             </td>
+                        @endif
+                    </tr>
+                    @endif
+                    @endforeach
+                </mj-table>
+
+                <mj-divider border-width="1px" border-color="lightgrey"></mj-divider>
+
+                <mj-text>
+                @if(count($emailData['courierInfo']) > 0)
+                <h3>Shipping information</h3>
+                @endif
+                </mj-text>
+
+                <mj-section padding="0px">
+                    <mj-column width='60%'>
+
+                        <mj-text font-size="16px">
+                        @if(count($emailData['courierInfo']) > 0)
+                        {{$emailData['courierInfo']['courierName']}} : {{$emailData['courierInfo']['trackingNumber']}}
+                        @endif
+                        </mj-text>
+                    </mj-column>
+
+                    <mj-column width="40%">
+                        <mj-text>
+                        <td align="center" bgcolor="#ff9900" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#ff9900;" valign="middle">
+                            @if(count($emailData['courierInfo']) > 0)
+                            <a type="button"
+                             href="{{ (count($emailData['courierInfo']) > 0) ? $emailData['courierInfo']['trackingUrl'] : '#' }}"
+                            style="display:inline-block;width:90px;background:#ff9900;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:3px;" target="_blank" >
+                            Track Shipment
+                            </a>
+                            @endif
+                        </td>
+
+                        </mj-text>
+
+
+
+
+
+
+                    </mj-column>
+                </mj-section>
+
+                <mj-divider padding-top="35px" border-width="1px" border-color="lightgrey"></mj-divider>
+
+                <mj-text font-size="13px" color="grey">
+                    If you have any questions, reply to this email or contact us at
+                    <a href="mailto:{{ $order->sellerEmail() }}">{{ $order->sellerEmail() }}</a>
+                </mj-text>
+
+                <mj-image
+                    width="168px"
+                    padding="25px 25px"
+                    src="https://media.hypershapes.com/images/email-affiliate-badge.png"
+                    alt="hyper-logo"
+                    href="http://hypershapes.com?affiliate_id={{$affiliate->affiliate_unique_id ??''}}"
+                >
+                </mj-image>
+            </mj-column>
+            </mj-group>
+        </mj-section>
+    </mj-body>
+</mjml>

@@ -1,0 +1,43 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-size="16px"/>
+        </mj-attributes>
+    </mj-head>
+    <mj-body>
+        <mj-section>
+            <mj-column>
+                <mj-text>**Do Not Reply Directly To This Email**</mj-text>
+
+                <mj-table>
+                    @foreach($formFields as $field => $value)
+                      <tr><td height="20" style="vertical-align:top;height:20px;"></td></tr>
+
+                      <tr>
+                          <td style="font-weight: bold;">{{ $field }}:</td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <mj-text padding-top="0">{{ $value }}</mj-text>
+                          </td>
+                      </tr>
+                      @endforeach
+                  </mj-table>
+
+                  <mj-spacer height="20px"></mj-spacer>
+
+                  <mj-text>Date: {{ date('Y-m-d') }}</mj-text>
+                  <mj-text padding-top="0">Time: {{ date('h:i A') }}</mj-text>
+
+                  <mj-image
+                     width="168px"
+                     padding="25px 25px"
+                     src="https://media.hypershapes.com/images/email-affiliate-badge.png"
+                     alt="hyper-logo"
+                     href="{{config('app.url')}}/register?affiliate_id={{$affiliate->affiliate_unique_id}}"
+                  >
+                  </mj-image>
+              </mj-column>
+          </mj-section>
+      </mj-body>
+  </mjml>

@@ -1,0 +1,141 @@
+{
+    "firstCondition": [
+        "Total Sales",
+        "Tags",
+        "Custom Field",
+        "People Profile",
+        "Purchases",
+        "Orders",
+        "Average Order Value"
+    ],
+
+    "emailSub": [
+        "has received",
+        "has not received",
+        "has opened",
+        "has not opened",
+        "has clicked",
+        "has not clicked"
+    ],
+
+    "totalSalesSub": [
+        "is greater than or equal to",
+        "is less than or equal to",
+        "equals",
+        "between"
+    ],
+
+    "purchasesSub": [
+        "have been made",
+        "have not been made"
+    ],
+
+    "tagSub": [
+        "contain",
+        "do not contain"
+    ],
+
+    "ordersSub": [
+        "is greater than or equal to",
+        "is less than or equal to",
+        "equals",
+        "between"
+    ],
+
+    "aovSub": [
+        "is greater than or equal to",
+        "is less than or equal to",
+        "equals",
+        "between"
+    ],
+
+    "siteActivitySub": [
+        "has viewed a product",
+        "has not viewed a product",
+        "has visited a page",
+        "has not visited a page"
+    ],
+
+    "productSelect": {
+        "any": "Any Products",
+        "some": "Include Any"
+    },
+
+    "productSelect_ori": [
+        "Any Products",
+        "include any"
+    ],
+
+    "emailSelect": [
+        "Any Emails",
+        "include any"
+    ],
+
+    "emailOptions": [
+        "email 1",
+        "email 2",
+        "email 3"
+    ],
+
+    "productOptions": {
+        "productTitle": "Product Name"
+    },
+
+    "productOptions_ori": [
+        "Product Name",
+        "Product Category",
+        "Product Tag",
+        "Product ID",
+        "Product SKU"
+    ],
+
+    "customSelect": [
+        "is set",
+        "is not set",
+        "is",
+        "is not",
+        "is less than or equal to",
+        "is greater than or equal to"
+    ],
+
+    "peopleProfileLabels": {
+        "fname": "First name",
+        "lname": "Last name",
+        "email": "Email",
+        "phone_number": "Mobile number",
+        "gender": "Gender",
+        "birthday": "Birth date",
+
+        "address1": "Address 1",
+        "address2": "Address 2",
+        "zip": "Postcode",
+        "city": "City",
+        "state": "State",
+        "country": "Country"
+    },
+
+    "peopleProfileSelect": [
+        "is set",
+        "is not set",
+        "is",
+        "is not"
+    ],
+
+    "accuracy": [
+        "at least",
+        "at most",
+        "exactly"
+    ],
+
+    "timeFrame": [
+        "in the last",
+        "between",
+        "over all time"
+    ],
+
+    "duration": [
+        "days",
+        "months",
+        "years"
+    ]
+}

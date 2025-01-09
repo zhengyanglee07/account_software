@@ -1,0 +1,11 @@
+{
+    "ubuntu": {
+        "300": "C:\\laragon\\www\\hypershapes\\storage\\fonts\/\/ubuntu-300_613f08fb7b004bc5fb7c2c42bdbdac18",
+        "normal": "C:\\laragon\\www\\hypershapes\\storage\\fonts\/\/ubuntu-normal_73b0924b94291ad8979922ce92c32081",
+        "500": "C:\\laragon\\www\\hypershapes\\storage\\fonts\/\/ubuntu-500_8c749d055cc42f909e89de624315fe89",
+        "bold": "C:\\laragon\\www\\hypershapes\\storage\\fonts\/\/ubuntu-bold_1003df1dfadb71ff02ea82a49ac3f185"
+    },
+    "adobeheitistd": {
+        "normal": "adobeheitistd_normal_962bd4731f9208de11ac4623d351756f"
+    }
+}

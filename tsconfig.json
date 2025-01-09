@@ -1,0 +1,125 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "strict": true,
+        "jsx": "preserve",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "types": [
+            "vite/client"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@assets/*": [
+                "resources/js/assets/*"
+            ],
+            "@components/*": [
+                "resources/js/components/*"
+            ],
+            "@layouts/*": [
+                "resources/js/layout/*"
+            ],
+            "@lib/*": [
+                "resources/js/lib/*"
+            ],
+            "@mixins/*": [
+                "resources/js/mixins/*"
+            ],
+            "@pages/*": [
+                "resources/js/pages/*"
+            ],
+            "@plugins/*": [
+                "resources/js/plugins/*"
+            ],
+            "@store/*": [
+                "resources/js/*"
+            ],
+            "@services/*": [
+                "resources/modules/shared/services/*"
+            ],
+            "@shared/*": [
+                "resources/modules/shared/*"
+            ],
+            "@funnel/*": [
+                "resources/modules/funnel/*"
+            ],
+            "@product/*": [
+                "resources/modules/product/*"
+            ],
+            "@builder/*": [
+                "resources/modules/builder/*"
+            ],
+            "@app/*": [
+                "resources/modules/app/*"
+            ],
+            "@template/*": [
+                "resources/modules/template/*"
+            ],
+            "@setting/*": [
+                "resources/modules/setting/*"
+            ],
+            "@subscription/*": [
+                "resources/modules/subscription/*"
+            ],
+            "@order/*": [
+                "resources/modules/order/*"
+            ],
+            "@promotion/*": [
+                "resources/modules/promotion/*"
+            ],
+            "@onlineStore/*": [
+                "resources/modules/online-store/*"
+            ],
+            "@onboarding/*": [
+                "resources/modules/onboarding/*"
+            ],
+            "@automation/*": [
+                "resources/modules/automation/*"
+            ],
+            "@productRecommendaiton/*": [
+                "resources/modules/product-recommendation/*"
+            ],
+            "@cashback/*": [
+                "resources/modules/cashback/*"
+            ],
+            "@people/*": [
+                "resources/modules/people/*"
+            ],
+            "@socialProof/*": [
+                "resources/modules/social-proof/*"
+            ],
+            "@affiliate/*": [
+                "resources/modules/affiliate/*"
+            ],
+            "@report/*": [
+                "resources/modules/report/*"
+            ],
+            "@auth/*": [
+                "resources/modules/auth/*"
+            ],
+            "@customerAccount/*": [
+                "resources/modules/customer-account/*"
+            ],
+            "@email/*": [
+                "resources/modules/email/*"
+            ],
+            "@referral/*": [
+                "resources/modules/referral/*"
+            ],
+            "@hypershapesAffiliate/*": [
+                "resources/modules/hypershapes-affiliate/*"
+            ]
+        }
+    },
+    "include": [
+        "resources/**/*",
+        "public/js/modernizr-webp-support-detection.js",
+    ]
+}
