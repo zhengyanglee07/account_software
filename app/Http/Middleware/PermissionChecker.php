@@ -28,6 +28,22 @@ class PermissionChecker
      */
     public function handle($request, Closure $next)
     {
+        $request['permissionData'] = [
+            "subscription" => [],
+            "showLimitModal" => false,
+            "context" => "",
+            "modalTitle" => "You've Reach The Limit",
+            "isSubscriptionPage" => false,
+            "featureForPaidPlan" => [],
+            "permissionDetail" =>  [
+                "Free" =>  [],
+                "Square" => [],
+                "Triangle" => [],
+                "Circle" => []
+            ],
+            "currentPlan" => "Free",
+        ];
+        return $next($request);
         if (!Auth::check()) return $next($request);
 
         $this->account = Account::find(Auth::user()->currentAccountId);
