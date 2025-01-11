@@ -4,316 +4,355 @@
     back-to="/settings/all"
     is-setting
   >
-    <!-- general info  -->
-    <BaseSettingLayout title="Timezone">
-      <template #description>
-        View and update your account timezone.
-      </template>
+    <BaseSettingLayout title="Company Information">
+      <template #description> Information related to your company. </template>
 
       <template #content>
-        <AccountGeneralInfo
-          :account-name="account.accountName"
-          :currency="account.currency"
-          :timezone="account.timeZone"
-        />
-      </template>
+        <BaseFormGroup col="6" for="f_company" label="Company" required>
+          <BaseFormInput v-model="form.company" id="f_company" type="text" />
+        </BaseFormGroup>
+        <BaseFormGroup col="6" for="f_tin" label="TIN" required>
+          <BaseFormInput v-model="form.tax_id_no" id="f_tin" type="text" />
+        </BaseFormGroup>
 
-      <template #footer />
+        <BaseFormGroup col="6" label="Registration No. Type" required>
+          <BaseButtonGroup v-model="form.reg_no_type" :list="REG_TYPE" />
+        </BaseFormGroup>
+        <BaseFormGroup col="6" for="f_regNo" label="Registration No." required>
+          <BaseFormInput v-model="form.reg_no" id="f_regNo" type="text" />
+        </BaseFormGroup>
+
+        <BaseFormGroup
+          col="6"
+          for="f_oldRegNo"
+          label="Old Registration No."
+          required
+        >
+          <BaseFormInput
+            v-model="form.old_reg_no"
+            id="f_oldRegNo"
+            type="text"
+          />
+        </BaseFormGroup>
+        <BaseFormGroup
+          col="6"
+          for="f_sstRegNo"
+          label="SST Registration No."
+          required
+        >
+          <BaseFormInput
+            v-model="form.sst_reg_no"
+            id="f_sstRegNo"
+            type="text"
+          />
+        </BaseFormGroup>
+
+        <BaseFormGroup
+          col="6"
+          for="f_msicCode"
+          label="MSIC Code"
+          @click="openModal(MSIC_CODE_MODAL_ID)"
+          required
+        >
+          <BaseFormInput
+            v-model="form.msic_code_description"
+            id="f_msicCode"
+            type="text"
+          />
+        </BaseFormGroup>
+        <BaseFormGroup
+          col="6"
+          for="f_"
+          label="Tourism Tax Registration No."
+          required
+        >
+          <BaseFormInput
+            v-model="form.tourism_tax_reg_no"
+            id="f_sstRegNo"
+            type="text"
+          />
+        </BaseFormGroup>
+      </template>
     </BaseSettingLayout>
-    <!-- end general info  -->
 
-    <!-- company profile  -->
-
-    <BaseSettingLayout title="Company Profile">
-      <template #description>
-        View and update your company details.
-      </template>
+    <BaseSettingLayout title="Company Contact">
+      <template #description
+        >The contact information for your company.</template
+      >
 
       <template #content>
-        <div class="w-100">
-          <div
-            class="row w-100"
-            style="height: 300px"
-          >
-            <div class="col-lg-6">
-              <!-- Company Logo -->
-              <BaseFormGroup
-                style="height: 100%"
-                label="Company Logo"
-              >
-                <BaseImagePreview
-                  style="height: 100%"
-                  size="lg"
-                  :image-u-r-l="
-                    accountDetails.company_logo ||
-                      'https://media.hypershapes.com/images/hypershapes-favicon.png'
-                  "
-                  @delete="removeCompanyLogo"
-                  @click="sectionType = 'companyLogo'"
-                />
-              </BaseFormGroup>
-            </div>
-            <div class="col-lg-6">
-              <!-- Favicon -->
-              <BaseFormGroup
-                label="Favicon"
-                style="height: 100%"
-              >
-                <BaseImagePreview
-                  style="height: 100%"
-                  size="lg"
-                  :image-u-r-l="
-                    accountDetails.favicon ||
-                      'https://media.hypershapes.com/images/hypershapes-favicon.png'
-                  "
-                  @delete="removeFavicon"
-                  @click="sectionType = 'favicon'"
-                />
-                <span
-                  id="favicon"
-                  class="error-message error-font-size"
-                />
-              </BaseFormGroup>
-            </div>
+        <BaseFormGroup col="6" for="f_contact_no" label="Contact No." required>
+          <BaseFormTelInput
+            v-model="form.contact_no"
+            :name="'phone_number'"
+            :input-id="'f_contact_no'"
+          />
+        </BaseFormGroup>
+        <BaseFormGroup
+          col="6"
+          for="f_contact_email"
+          label="Email Address"
+          required
+        >
+          <BaseFormInput
+            id="f_contact_email"
+            v-model="form.contact_email"
+            type="email"
+          />
+        </BaseFormGroup>
 
-            <!-- Empty Div for styling -->
-            <!-- <div class="setting-page__content-row col-sm"></div> -->
-          </div>
-
-          <!-- Store Name -->
-          <BaseFormGroup
-            label="Store Name"
-            label-for="storeName"
-          >
-            <BaseFormInput
-              id="storeName"
-              v-model="accountDetails.store_name"
-              type="text"
-              placeholder="Enter Store Name"
-            />
-            <span class="error-message error-font-size">{{
-              errorsMsg.store_name
-            }}</span>
-          </BaseFormGroup>
-
-          <!-- Company Name -->
-          <BaseFormGroup
-            label="Company Name"
-            label-for="companyName"
-          >
-            <BaseFormInput
-              id="companyName"
-              v-model="accountDetails.company"
-              type="text"
-              placeholder="Enter Company Name"
-            />
-            <span class="error-message error-font-size">{{
-              errorsMsg.company
-            }}</span>
-          </BaseFormGroup>
-
-          <!-- Full Address -->
-          <BaseFormGroup
-            label="Full Address"
-            label-for="fullAddress"
-          >
-            <BaseFormInput
-              id="fullAddress"
-              v-model="accountDetails.address"
-              type="text"
-              placeholder="Enter Address"
-            />
-            <span class="error-message error-font-size">{{
-              errorsMsg.address
-            }}</span>
-          </BaseFormGroup>
-
-          <div class="setting-page__content-row-lg">
-            <div class="row w-100">
-              <!-- Country -->
-              <div class="col-lg-6">
-                <BaseFormGroup label="Country">
-                  <BaseFormCountrySelect
-                    v-model="accountDetails.country"
-                    :country="accountDetails.country"
-                  />
-                </BaseFormGroup>
-              </div>
-
-              <!-- State -->
-              <div class="col-lg-6">
-                <BaseFormGroup label="State">
-                  <BaseFormRegionSelect
-                    v-model="accountDetails.state"
-                    :country="accountDetails.country"
-                    :region="accountDetails.state"
-                  />
-                  <span
-                    id="errState"
-                    class="error-message error-font-size"
-                  >{{
-                    errorsMsg.state
-                  }}</span>
-                </BaseFormGroup>
-              </div>
-            </div>
-          </div>
-
-          <div class="setting-page__content-row-lg">
-            <div class="row w-100">
-              <!-- City -->
-              <div class="col-lg-6">
-                <BaseFormGroup
-                  label="City"
-                  label-for="city"
-                >
-                  <BaseFormInput
-                    id="city"
-                    v-model="accountDetails.city"
-                    type="text"
-                    placeholder="Enter City"
-                  />
-                  <span
-                    id="errCity"
-                    class="error-message error-font-size"
-                  >{{
-                    errorsMsg.city
-                  }}</span>
-                </BaseFormGroup>
-              </div>
-
-              <!-- ZIP Code -->
-              <div class="col-lg-6">
-                <BaseFormGroup
-                  label="Zip Code"
-                  label-for="zipCode"
-                >
-                  <BaseFormInput
-                    id="zipCode"
-                    v-model="accountDetails.zip"
-                    type="number"
-                    placeholder="Enter ZIP Code"
-                  />
-                  <span class="error-message error-font-size">{{
-                    errorsMsg.zip
-                  }}</span>
-                </BaseFormGroup>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BaseFormGroup
+          col="12"
+          label="Website URL"
+          for="f_website_url"
+          required
+        >
+          <BaseButtonGroup v-model="form.website_url" />
+          <BaseFormInput
+            v-model="form.website_url"
+            id="f_website_url"
+            type="text"
+          />
+        </BaseFormGroup>
       </template>
 
       <template #footer>
-        <BaseButton @click="saveCompanyProfile">
-          Save
-        </BaseButton>
+        <!-- <BaseButton @click="saveCompanyProfile"> -->
+        <!--   Save -->
+        <!-- </BaseButton> -->
       </template>
     </BaseSettingLayout>
-    <!-- end company profile  -->
-    <ImageUploader @update-value="chooseImage" />
+
+    <BaseSettingLayout title="Company Addresses">
+      <template #description
+        >The contact information for your company.</template
+      >
+
+      <template #content>
+        <template v-for="(address, index) in form.addresses" :key="index">
+          <BaseFormGroup
+            col="11"
+            :for="`f_address_name_${index}`"
+            label="Address Name"
+            required
+          >
+            <BaseFormInput
+              v-model="address.name"
+              :id="`f_address_name_${index}`"
+              type="text"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup col="1" label="&nbsp;">
+            <BaseButton
+              type="none"
+              has-delete-icon
+              @click="removeAddress(index)"
+              p-2
+            ></BaseButton>
+          </BaseFormGroup>
+
+          <BaseFormGroup
+            col="12"
+            :for="`f_address_${index}`"
+            label="Address"
+            required
+          >
+            <BaseFormInput
+              v-model="address.address1"
+              :id="`f_address_${index}`"
+              type="text"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup col="6" :for="`f_city_${index}`" label="City" required>
+            <BaseFormInput
+              v-model="address.city"
+              :id="`f_city_${index}`"
+              type="text"
+            />
+          </BaseFormGroup>
+
+          <BaseFormGroup col="6" :for="`f_zip_${index}`" label="Zip" required>
+            <BaseFormInput
+              v-model="address.zip"
+              :id="`f_zip_${index}`"
+              type="text"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup
+            col="6"
+            :for="`f_country_${index}`"
+            label="Country"
+            required
+          >
+            <BaseFormSelect
+              v-model="address.country_code"
+              :id="`f_country_#${index}`"
+              :options="props.countries"
+              label-key="name"
+              value-key="a3_code"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup
+            col="6"
+            :for="`f_state_${index}`"
+            label="State"
+            required
+          >
+            <BaseFormSelect
+              v-if="address.country_code === 'MYS'"
+              v-model="form.addresses[0].state"
+              :id="`f_state_${index}`"
+              :options="props.states"
+              label-key="name"
+              value-key="code"
+            />
+            <BaseFormInput
+              v-else
+              v-model="address.state"
+              id="f_state"
+              type="text"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup
+            col="6"
+            :for="`f_defaultBilling_${index}`"
+            label="Default Billing"
+            required
+          >
+            <BaseFormCheckBox
+              v-model="address.is_default_billing"
+              @change="handleDefaultChange('billing', index)"
+              :id="`f_defaultBilling_${index}`"
+              :value="true"
+            />
+          </BaseFormGroup>
+          <BaseFormGroup
+            col="6"
+            :for="`f_defaultShipping_${index}`"
+            label="Default Shipping"
+          >
+            <BaseFormCheckBox
+              v-model="address.is_default_shipping"
+              @change="handleDefaultChange('shipping', index)"
+              :id="`f_defaultShipping_${index}`"
+              :value="true"
+            />
+          </BaseFormGroup>
+        </template>
+      </template>
+
+      <template #footer>
+        <BaseButton has-add-icon type="link" @click="addAddress"
+          >Add Address</BaseButton
+        >
+      </template>
+    </BaseSettingLayout>
+
+    <BaseSettingLayout title="Company Logo">
+      <template #description>The official logo of your business.</template>
+
+      <template #content>
+        <BaseFormGroup col="6" for="f_company_logo" required>
+          <BaseImagePreview
+            style="height: 100%"
+            size="lg"
+            :image-u-r-l="
+              form.company_logo ||
+              'https://media.hypershapes.com/images/hypershapes-favicon.png'
+            "
+            @delete="form.company_logo = ''"
+            @click="sectionType = 'companyLogo'"
+          />
+        </BaseFormGroup>
+      </template>
+    </BaseSettingLayout>
+
+    <template #footer>
+      <BaseButton @click="saveCompanyProfile"> Save </BaseButton>
+    </template>
   </BasePageLayout>
+
+  <MSICCodeModal
+    :modal-id="MSIC_CODE_MODAL_ID"
+    :msic-codes="msicCodes"
+    @change="handleMSCICodeSelect"
+  />
+
+  <ImageUploader @update-value="chooseImage" />
 </template>
 
-<script>
-import AccountGeneralInfo from '@setting/components/AccountGeneralInfo.vue';
+<script setup>
+import { reactive, computed, ref, watch } from 'vue';
+import MSICCodeModal from '@setting/components/MSICCodeModal.vue';
+import { Modal } from 'bootstrap';
 import ImageUploader from '@shared/components/ImageUploader.vue';
-import cloneDeep from 'lodash/cloneDeep';
 import eventBus from '@services/eventBus.js';
+import axios from 'axios';
 
-export default {
-  name: 'AccountSetting',
+const MSIC_CODE_MODAL_ID = 'MSICCodeModal';
 
-  components: {
-    AccountGeneralInfo,
-    ImageUploader,
+const props = defineProps({
+  msicCodes: {
+    type: Array,
+    required: true,
   },
+});
 
-  props: {
-    account: {
-      type: Object,
-      default: () => {},
-    },
-  },
+const DEFAULT_ADDRESS = {
+  id: '',
+  name: '',
+  address1: '',
+  city: '',
+  zip: '',
+  country_code: '',
+  state: '',
+  is_default_billing: false,
+  is_default_shipping: false,
+};
 
-  data() {
-    return {
-      sectionType: 'companyLogo',
-      accountDetails: {},
-      errorsMsg: {
-        address: '',
-        city: '',
-        store_name: '',
-        company: '',
-        state: '',
-        zip: '',
-      },
-    };
-  },
+const form = reactive({
+  company: '',
+  tax_id_no: '',
+  reg_no_type: '',
+  reg_no: '',
+  old_reg_no: '',
+  msic_code: '',
+  msic_code_description: '',
+  tourism_tax_reg_no: '',
+  contact_no: '',
+  contact_email: '',
+  website_url: '',
+  addresses: [{ ...DEFAULT_ADDRESS }],
+  company_logo: '',
+});
+const sectionType = ref('companyLogo');
 
-  mounted() {
-    this.accountDetails = cloneDeep(this.account);
-    eventBus.$on('addCompanyLogoEvent', (image) => {
-      this.accountDetails.company_logo = image;
-    });
-    eventBus.$on('addFaviconEvent', (image) => {
-      this.accountDetails.favicon = image;
-    });
-  },
+const addAddress = () => {
+  form.addresses.push({ ...DEFAULT_ADDRESS });
+};
 
-  methods: {
-    chooseImage(e) {
-      if (this.sectionType === 'companyLogo')
-        eventBus.$emit('addCompanyLogoEvent', e);
-      else eventBus.$emit('addFaviconEvent', e);
-    },
-    saveCompanyProfile() {
-      let isError = false;
-      Object.keys(this.accountDetails).forEach((key) => {
-        const isEmpty = this.accountDetails[key] === '';
-        if (isError === false) isError = isEmpty;
-        this.errorsMsg[key] = isEmpty ? 'Please fill in the blanks' : '';
-      });
-      if (isError || document.getElementById('favicon').innerHTML !== '')
-        return;
-      this.$axios
-        .put('/account/setting/company/update', {
-          companyLogo: this.accountDetails.company_logo,
-          favicon: this.accountDetails.favicon,
-          storeName: this.accountDetails.store_name,
-          companyName: this.accountDetails.company,
-          companyAddress: this.accountDetails.address,
-          country: this.accountDetails.country,
-          city: this.accountDetails.city,
-          state: this.accountDetails.state,
-          zip: this.accountDetails.zip,
-        })
-        .then((response) => {
-          this.$toast.success(
-            'Success',
-            'Successfully updated company profiles'
-          );
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
-    },
+const removeAddress = (index) => {
+  form.addresses.splice(index, 1);
+};
 
-    removeCompanyLogo() {
-      this.accountDetails.company_logo =
-        'https://media.hypershapes.com/images/hypershapes-favicon.png';
-    },
+const openModal = (modalId) => {
+  const modalInstance = Modal.getInstance(document.getElementById(modalId));
+  modalInstance.show();
+};
 
-    removeFavicon() {
-      this.accountDetails.favicon =
-        'https://media.hypershapes.com/images/hypershapes-favicon.png';
-    },
-    changeRegion(value) {
-      if (value !== '') {
-        this.accountDetails.state = value;
-      }
-    },
-  },
+const handleMSCICodeSelect = (selectedMsicCode) => {
+  form.msic_code = selectedMsicCode.code;
+  form.msic_code_description = `${selectedMsicCode.code}-${selectedMsicCode.description}`;
+};
+
+const chooseImage = (e) => {
+  if (sectionType.value === 'companyLogo')
+    eventBus.$emit('addCompanyLogoEvent', e);
+  else eventBus.$emit('addFaviconEvent', e);
+};
+
+const saveCompanyProfile = () => {
+  axios.put('/account/setting/company/update', { data: form });
 };
 </script>
 

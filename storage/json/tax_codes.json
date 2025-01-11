@@ -1,0 +1,242 @@
+[
+  {
+    "id": 21,
+    "code": "EEM",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 5,
+    "code": "PSL10",
+    "rate": 10,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 4,
+    "code": "PSL5",
+    "rate": 5,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 16,
+    "code": "PSLE1",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 17,
+    "code": "PSLE2",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 18,
+    "code": "PSLE3",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 19,
+    "code": "PSLE4",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 20,
+    "code": "PSLE5",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 6,
+    "code": "PSV6",
+    "rate": 6,
+    "tax_system": "mysst_service_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 23,
+    "code": "PSV8",
+    "rate": 8,
+    "tax_system": "mysst_service_tax",
+    "type": "purchase",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 2,
+    "code": "SL10",
+    "rate": 10,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 1,
+    "code": "SL5",
+    "rate": 5,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 8,
+    "code": "SLEA",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 9,
+    "code": "SLEB",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 10,
+    "code": "SLEC1",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 11,
+    "code": "SLEC2",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 12,
+    "code": "SLEC3",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 13,
+    "code": "SLEC4",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 14,
+    "code": "SLEC5",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 7,
+    "code": "SLEX",
+    "rate": 0,
+    "tax_system": "mysst_sales_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 3,
+    "code": "SV6",
+    "rate": 6,
+    "tax_system": "mysst_service_tax",
+    "type": "sales_payment",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 22,
+    "code": "SV8",
+    "rate": 8,
+    "tax_system": "mysst_service_tax",
+    "type": "sales_payment",
+    "is_archived": false,
+    "is_exempted": false,
+    "is_b2b_exempted": false
+  },
+  {
+    "id": 15,
+    "code": "SVE",
+    "rate": 0,
+    "tax_system": "mysst_service_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": true
+  },
+  {
+    "id": 24,
+    "code": "SVE8",
+    "rate": 0,
+    "tax_system": "mysst_service_tax",
+    "type": "sales_invoice",
+    "is_archived": false,
+    "is_exempted": true,
+    "is_b2b_exempted": true
+  }
+]

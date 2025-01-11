@@ -7,6 +7,7 @@ use App\Tax;
 use App\User;
 use App\Order;
 use App\Account;
+use App\AccountAddress;
 use App\Currency;
 use App\ShopType;
 use App\PromoCode;
@@ -488,6 +489,9 @@ class AccountController extends Controller
 
     public function accountSettings(Request $request)
     {
+        $msicCodePath = storage_path() . "/json/msic_code.json";
+        $msicCodes = json_decode(file_get_contents($msicCodePath), true);
+
         $account = Account::select(
             'company_logo',
             'favicon',
@@ -503,7 +507,8 @@ class AccountController extends Controller
             'timeZone',
         )->find(Auth::user()->currentAccountId);
 
-        return Inertia::render('setting/pages/AccountSettings', compact('account'));
+
+        return Inertia::render('setting/pages/AccountSettings', compact('account', 'msicCodes'));
     }
 
     public function updateTimezone(Request $request)
@@ -515,19 +520,40 @@ class AccountController extends Controller
         return response()->json(['message' => 'Successfully updated timezone']);
     }
 
-    public function updateCompanyProfile(Account $account, Request $request)
+    public function updateCompanyProfile(Request $request)
     {
-        $account = Account::find(Auth::user()->currentAccountId);
-        $account->company_logo = $request->input('companyLogo');
-        $account->favicon = $request->input('favicon');
-        $account->store_name = $request->input('storeName') ?? $account->store_name;
-        $account->company = $request->input('companyName') ?? $account->companyName;
-        $account->address = $request->input('companyAddress') ?? $account->address;
-        $account->city = $request->input('city') ?? $account->city;
-        $account->state = $request->input('state') ?? $account->state;
-        $account->country = $request->input('country') ?? $account->country;
-        $account->zip = $request->input('zip') ?? $account->zip;
-        $account->save();
+        $accountId = Auth::user()->currentAccountId;
+        $formData = $request->get('data');
+
+        $account = Account::find($accountId);
+        $account->update([
+            'company' => $formData['company'],
+            'tax_id_no' => $formData['tax_id_no'],
+            'reg_no_type' => $formData['reg_no_type'],
+            'reg_no' => $formData['reg_no'],
+            'old_reg_no' => $formData['old_reg_no'],
+            'msic_code' => $formData['msic_code'],
+            'msic_code_description' => $formData['msic_code_description'],
+            'tourism_tax_reg_no' => $formData['tourism_tax_reg_no'],
+            'contact_no' => $formData['contact_no'],
+            'contact_email' => $formData['contact_email'],
+            'website_url' => $formData['website_url'],
+            'company_logo' => $formData['company_logo'],
+        ]);
+        foreach ($formData['addresses'] as $address) {
+            AccountAddress::updateOrCreate([
+                'account_id' => $accountId,
+                'name' => $address['name'],
+            ], [
+                'address1' => $address['address1'],
+                'city' => $address['city'],
+                'zip' => $address['zip'],
+                'country_code' => $address['country_code'],
+                'state' => $address['state'],
+                'is_default_billing' => $address['is_default_billing'] ? 1 : 0,
+                'is_default_shipping' => $address['is_default_shipping'] ? 1 : 0,
+            ]);
+        }
     }
 
     public function updateEducationalStatus(Account $account)

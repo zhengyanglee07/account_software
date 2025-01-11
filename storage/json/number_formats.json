@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "type": "sale_quote",
+    "format": "QT-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 2,
+    "type": "sale_order",
+    "format": "SO-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 3,
+    "type": "sale_delivery_order",
+    "format": "DO-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 4,
+    "type": "sale_invoice",
+    "format": "IV-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 5,
+    "type": "sale_invoice",
+    "format": "BS[7DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 6,
+    "type": "sale_credit_note",
+    "format": "CN-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 7,
+    "type": "purchase_order",
+    "format": "PO-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 8,
+    "type": "purchase_goods_received_note",
+    "format": "GR-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 9,
+    "type": "purchase_bill",
+    "format": "BL-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 10,
+    "type": "purchase_credit_note",
+    "format": "SC-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 11,
+    "type": "official_receipt",
+    "format": "OR-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 12,
+    "type": "payment_voucher",
+    "format": "PV-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 13,
+    "type": "bank_transfer",
+    "format": "FT-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 14,
+    "type": "journal_entry",
+    "format": "JE-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 15,
+    "type": "stock_adjustment",
+    "format": "SA-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 16,
+    "type": "stock_transfer",
+    "format": "ST-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 17,
+    "type": "asset",
+    "format": "FA-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 18,
+    "type": "contra",
+    "format": "CT-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  },
+  {
+    "id": 19,
+    "type": "tax_deemed_payment",
+    "format": "DP-[5DIGIT]",
+    "is_default": null,
+    "created_at": "2025-01-09",
+    "updated_at": "2025-01-09"
+  }
+]

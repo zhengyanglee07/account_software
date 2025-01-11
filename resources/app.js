@@ -131,6 +131,11 @@ createInertiaApp({
         );
         app.component('BaseButton', BaseButton);
 
+        const BaseButtonGroup = defineAsyncComponent(() =>
+            import('@shared/components/BaseButtonGroup.vue')
+        );
+        app.component('BaseButtonGroup', BaseButtonGroup);
+
         const BaseFormSwitch = defineAsyncComponent(() =>
             import('@shared/components/BaseFormSwitch.vue')
         );
@@ -150,6 +155,11 @@ createInertiaApp({
             import('@shared/components/BaseMultiSelect.vue')
         );
         app.component('BaseMultiSelect', BaseMultiSelect);
+
+        const BaseSearchSelect = defineAsyncComponent(() =>
+            import('@shared/components/BaseSearchSelect.vue')
+        );
+        app.component('BaseSearchSelect', BaseSearchSelect);
 
         const BaseColorPicker = defineAsyncComponent(() =>
             import('@shared/components/BaseColorPicker.vue')

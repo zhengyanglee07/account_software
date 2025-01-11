@@ -14,6 +14,7 @@ class AddColumnsIntoProcessedContactsTable extends Migration
     public function up()
     {
         Schema::table('processed_contacts', function (Blueprint $table) {
+            $table->string('entity_type')->nullable();
             $table->string('reg_no')->nullable();
             $table->string('old_reg_no')->nullable();
             $table->string('sst_reg_no')->nullable();
@@ -31,6 +32,7 @@ class AddColumnsIntoProcessedContactsTable extends Migration
     public function down()
     {
         Schema::table('processed_contacts', function (Blueprint $table) {
+            $table->dropColumn('entity_type');
             $table->dropColumn('reg_no');
             $table->dropColumn('old_reg_no');
             $table->dropColumn('sst_reg_no');

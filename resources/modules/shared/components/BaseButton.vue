@@ -18,11 +18,12 @@
     @click="$emit('click')"
   >
     <i
-      v-if="hasAddIcon || hasEditIcon"
+      v-if="hasAddIcon || hasEditIcon || hasDeleteIcon"
       class="fa-solid me-2"
       :class="{
         'fa-plus': hasAddIcon,
         'fa-pen': hasEditIcon,
+        'fa-trash text-danger': hasDeleteIcon,
       }"
     />
     <!-- @slot The content of the button (text, icon, etc) -->
@@ -56,6 +57,7 @@ export default {
           'light-primary',
           'link',
           'dark',
+          'none'
         ].includes(value);
       },
     },
@@ -126,6 +128,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    hasDeleteIcon: {
+      type: Boolean,
+      default: false,
+    },
     /**
      * If true, will append a down icon to the button text
      */
@@ -184,5 +190,9 @@ a {
 .btn:deep(i) {
   line-height: 1.5;
   padding-right: 0;
+}
+
+.fa-trash.text-danger:hover {
+  opacity: 0.8;
 }
 </style>

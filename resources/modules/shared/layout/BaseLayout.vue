@@ -233,6 +233,17 @@ const navigations = [
     iconURL: 'dashboard-icon.svg',
   },
   {
+    title: 'Sales',
+    link: 'sales',
+    iconURL: 'orders-icon.svg',
+    children: [
+      {
+        title: 'Invoices',
+        link: '/sales/invoices',
+      },
+    ]
+  },
+  {
     title: 'Orders',
     link: '/orders',
     iconURL: 'orders-icon.svg',

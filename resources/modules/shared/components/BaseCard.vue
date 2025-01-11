@@ -2,6 +2,7 @@
   <div
     class="card card-flush"
     :class="[
+      noXSpacing ? 'px-0 mx-0' : '',
       noCardBottomMargin ? 'mb-0' : 'mb-6',
       isDatatable ? 'py-0' : 'py-3',
       {
@@ -12,7 +13,7 @@
     <div
       v-if="hasHeader"
       class="card-header"
-      :class="isDatatable ? 'px-6 pt-4' : 'p-3 pb-0 mx-5'"
+      :class="[noXSpacing ? 'px-0 mx-0' : isDatatable ? 'px-6 pt-4' : 'p-3 pb-0 mx-5']"
     >
       <div
         v-if="title"
@@ -33,14 +34,15 @@
       </div>
     </div>
     <div
-      class="card-body row p-3 px-0"
-      :class="noBodyMargin ? 'mx-0' : 'mx-5'"
+      class="card-body p-3 px-0"
+      :class="[noXSpacing ? 'row' : 'row', noXSpacing ? 'px-0 mx-0' : noBodyMargin ? 'mx-0' : 'mx-5']"
     >
       <!-- @slot For the content of card body -->
       <slot />
     </div>
     <div
       v-if="hasFooter"
+      :class="[noXSpacing ? 'px-0 mx-0' : '']"
       class="card-footer d-flex justify-content-end p-6 pt-0"
     >
       <slot name="footer" />
@@ -107,6 +109,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    noXSpacing: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -114,5 +120,12 @@ export default {
 <style scoped>
 .card .card-header {
   min-height: 50px;
+}
+
+.no-x-row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>

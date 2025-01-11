@@ -89,36 +89,7 @@ class Account extends Model
 {
     use SoftDeletes;
 
-    protected $fillable =
-    [
-        'accountRandomId',
-        'user_id',
-        'shoptype_id',
-        'api',
-        'subscription_plan_id',
-        'subscription_status',
-        'password',
-        'domain',
-        'shopName',
-        'company',
-        'address',
-        'city',
-        'state',
-        'country',
-        'zip',
-        'industry',
-        'emailSent',
-        'refer_by',
-        'has_email_affiliate_badge',
-        'was_educated',
-        'was_selected_goal',
-        'selected_mini_store',
-        'selected_salechannel',
-        'terminate_cycle',
-        'send_onboarding_email_at',
-        'onboarding_email_to_sent',
-        'is_onboarded',
-    ];
+    protected $guarded = ['id'];
 
     public function user()
     {
@@ -266,6 +237,11 @@ class Account extends Model
     public function notifiableSetting()
     {
         return $this->hasOne(NotifiableSetting::class);
+    }
+
+    public function accountAddress()
+    {
+        return $this->hasMany(AccountAddress::class, 'account_id', 'id');
     }
 
     public static function boot()

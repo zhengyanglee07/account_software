@@ -53,7 +53,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 
 const isChecked = computed(() => {
   if (props.modelValue instanceof Array) {
@@ -75,6 +75,7 @@ const updateInput = (event) => {
   } else {
     emit('update:modelValue', !props.modelValue);
   }
+  emit('change', event);
 };
 </script>
 

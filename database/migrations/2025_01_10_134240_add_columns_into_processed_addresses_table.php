@@ -14,7 +14,8 @@ class AddColumnsIntoProcessedAddressesTable extends Migration
     public function up()
     {
         Schema::table('processed_addresses', function (Blueprint $table) {
-            $table->string('country_code')->nullable();
+            $table->string('name')->nullable();           $table->string('country_code')->nullable();
+            $table->string('state_code')->nullable();
             $table->tinyInteger('is_default_billing')->default(0);
             $table->tinyInteger('is_default_shipping')->default(0);
         });
@@ -28,7 +29,9 @@ class AddColumnsIntoProcessedAddressesTable extends Migration
     public function down()
     {
         Schema::table('processed_addresses', function (Blueprint $table) {
+            $table->dropColumn('name');
             $table->dropColumn('country_code');
+            $table->dropColumn('state_code');
             $table->dropColumn('is_default_billing');
             $table->dropColumn('is_default_shipping');
         });

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "country_code": "MY",
+    "code": "01",
+    "name": "Johor"
+  },
+  {
+    "id": 2,
+    "country_code": "MY",
+    "code": "02",
+    "name": "Kedah"
+  },
+  {
+    "id": 3,
+    "country_code": "MY",
+    "code": "03",
+    "name": "Kelantan"
+  },
+  {
+    "id": 4,
+    "country_code": "MY",
+    "code": "04",
+    "name": "Melaka"
+  },
+  {
+    "id": 5,
+    "country_code": "MY",
+    "code": "05",
+    "name": "Negeri Sembilan"
+  },
+  {
+    "id": 6,
+    "country_code": "MY",
+    "code": "06",
+    "name": "Pahang"
+  },
+  {
+    "id": 7,
+    "country_code": "MY",
+    "code": "07",
+    "name": "Pulau Pinang"
+  },
+  {
+    "id": 8,
+    "country_code": "MY",
+    "code": "08",
+    "name": "Perak"
+  },
+  {
+    "id": 9,
+    "country_code": "MY",
+    "code": "09",
+    "name": "Perlis"
+  },
+  {
+    "id": 10,
+    "country_code": "MY",
+    "code": "10",
+    "name": "Selangor"
+  },
+  {
+    "id": 11,
+    "country_code": "MY",
+    "code": "11",
+    "name": "Terengganu"
+  },
+  {
+    "id": 12,
+    "country_code": "MY",
+    "code": "12",
+    "name": "Sabah"
+  },
+  {
+    "id": 13,
+    "country_code": "MY",
+    "code": "13",
+    "name": "Sarawak"
+  },
+  {
+    "id": 14,
+    "country_code": "MY",
+    "code": "14",
+    "name": "Wilayah Persekutuan (Kuala Lumpur)"
+  },
+  {
+    "id": 15,
+    "country_code": "MY",
+    "code": "15",
+    "name": "Wilayah Persekutuan (Labuan)"
+  },
+  {
+    "id": 16,
+    "country_code": "MY",
+    "code": "16",
+    "name": "Wilayah Persekutuan (Putrajaya)"
+  }
+]
