@@ -780,10 +780,11 @@ class MyTaxDocumentService
             throw new \Exception('Unable to load private key.');
         }
 
-        $minifiedJSON = json_encode($data);
+        $minifiedJSON = json_encode($data, JSON_UNESCAPED_SLASHES);
         $hash = hash('sha256', $minifiedJSON, true);
 
         $docDigest = base64_encode($hash);
+        $this->docDigest = $docDigest;
 
         $sign = openssl_sign($hash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
         if (!$sign) {
@@ -856,7 +857,8 @@ class MyTaxDocumentService
                 ]
             ]
         ];
-        $signedProps = json_encode($signedProperties);
+
+        $signedProps = json_encode($signedProperties, JSON_UNESCAPED_SLASHES);
         $signedPropsHash = hash('sha256', $signedProps, true);
         $propsDigest = base64_encode($signedPropsHash);
 
@@ -1245,8 +1247,9 @@ class MyTaxDocumentService
         ];
 
 
-        $this->setSignatureElement($this->document);
+        $this->setSignatureElement($this->getDocument()['document']);
     }
+
 
     public function getDocument()
     {
@@ -1254,7 +1257,6 @@ class MyTaxDocumentService
             'Invoice' => [
                 $this->document
             ],
-
             '_A' => "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
             '_B' => "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
             '_D' => "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
