@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Traits\AuthAccountTrait;
 use App\Services\MyTaxService;
+use App\Services\MyTaxDocumentService;
+use Carbon\Carbon;
 
 class SalesController extends Controller
 {
@@ -18,8 +20,43 @@ class SalesController extends Controller
 
     public function showInvoiceDetailPage()
     {
+        $dn = [
+            "countryName"            => "MY",  // Country (C)
+            "stateOrProvinceName"    => "Rawang",  // State or Province
+            "localityName"           => "Selangor",  // City
+            "organizationName"       => "Lee Zheng Yang",  // Organization (O)
+            /*"organizationalUnitName" => "IT Dep",  // Organization Unit (OU)*/
+            "commonName"             => "Lee Zheng Yang",  // Common Name (CN)
+            "emailAddress"           => "zhengyangz1007@gmail.com",  // Email (E)
+            "organizationIdentifier" => "IG50668341090",  // Organization Identifier
+            "serialNumber"           => "011007101175",  // Serial Number
+        ];
+        $privateKey = openssl_pkey_new([
+            "private_key_bits" => 2048,
+            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+        ]);
+        $configPath = storage_path('keys/openssl.cnf');
+        // Generate a certificate signing request
+        $csr = openssl_csr_new($dn, $privateKey, [
+            "config" => $configPath,
+        ]);
+
+        // Self-sign the certificate
+        $certificate = openssl_csr_sign($csr, null, $privateKey, 365, ['config' => $configPath]); // Valid for 365 days
+        /*/// sve to storage/key/certificate.pem*/
+        /*openssl_x509_export_to_file($certificate, storage_path('keys/certificate.pem'));*/
+        /*openssl_pkey_export_to_file($privateKey, storage_path('keys/private_key.pem'));*/
+
+
         $myTaxService = new MyTaxService();
-        // $res = $myTaxService->apiRequest("/api/v1.0/taxpayer/validate/IG29222558100?idType=NRIC&idValue=970412016429");
+        $myTaxDocumentService = new MyTaxDocumentService();
+        $myTaxDocumentService->setDocument([]);
+
+
+        return response()->json($myTaxDocumentService->getDocument());
+
+        /*dd($myTaxDocumentService->getDocument());*/
+
 
         $currentAccountId = $this->getCurrentAccountId();
 

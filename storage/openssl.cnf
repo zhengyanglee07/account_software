@@ -1,0 +1,33 @@
+[ req ]
+default_bits       = 2048
+default_md         = sha256
+distinguished_name = req_distinguished_name
+req_extensions     = v3_req
+x509_extensions    = v3_ca
+
+[ req_distinguished_name ]
+countryName                = Country Name (2 letter code)
+countryName_default        = MY
+stateOrProvinceName        = State or Province Name (full name)
+stateOrProvinceName_default = Optional State
+localityName               = Locality Name (eg, city)
+localityName_default       = Optional Locality
+organizationName           = Organization Name (eg, company)
+organizationName_default   = Company Name Sdn Bhd
+organizationalUnitName     = Organizational Unit Name (optional)
+commonName                 = Common Name (e.g. server FQDN or YOUR name)
+commonName_default         = Company Name Sdn Bhd
+emailAddress               = Email Address
+emailAddress_default       = noemail@org.com.my
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+emailAddress = noemail@org.com.my
+1.2.840.113549.1.9.1 = zhengyangz1007@gmail.com
+2.5.4.97 = IG50668341090

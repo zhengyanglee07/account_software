@@ -1,0 +1,36 @@
+[ req ]
+default_bits       = 2048
+default_md         = sha256
+distinguished_name = req_distinguished_name
+req_extensions     = v3_req
+
+[ req_distinguished_name ]
+commonName         = Common Name (e.g., example.com)
+commonName_default = example.com
+
+countryName            = Country Name (2 letter code)
+countryName_default    = US
+
+emailAddress           = Email Address (E)
+emailAddress_default   = admin@example.com
+emailAddress_oid = 1.2.840.113549.1.9.1
+
+organizationName       = Organization Name (e.g., company)
+organizationName_default = Example Corp
+
+organizationalUnitName = Organizational Unit Name
+organizationalUnitName_default = IT Department
+
+organizationIdentifier = Organization Identifier
+organizationIdentifier_default = 123456789
+
+serialNumber           = Serial Number
+serialNumber_default   = 1234567890
+serialNumber_oid       = 2.5.4.5
+
+[ v3_req ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = example.com
+
