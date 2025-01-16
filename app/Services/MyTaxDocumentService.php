@@ -724,6 +724,7 @@ class MyTaxDocumentService
                     } else {
                         $taxAmountWithoutExemption = $this->priceCalculator([$tax['per_unit_amount'], '*', $tax['number_of_unit']]);
                         $taxAmount = $this->priceCalculator([$taxableAmount, '/', $totalExclusiveTax, '*',  $tax['per_unit_amount'], '*', $tax['number_of_unit']]);
+
                         $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
                             'BaseUnitMeasure' => [
                                 [
@@ -744,7 +745,7 @@ class MyTaxDocumentService
                                 ]
                             ],
                             'TaxableAmount' => [
-                                [,
+                                [
 
                                     '_' => $taxableAmount,
                                     'currencyID' => $data['currency_code']
@@ -1293,7 +1294,7 @@ class MyTaxDocumentService
         $this->document['LegalMonetaryTotal'][0] = [
             'LineExtensionAmount' => [
                 [
-                    '_' => $totalLineExtensionAmount,,
+                    '_' => $totalLineExtensionAmount,
                     'currencyID' => $data['currency_code']
                 ]
             ],
