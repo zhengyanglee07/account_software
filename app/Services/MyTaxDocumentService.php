@@ -534,7 +534,12 @@ class MyTaxDocumentService
 
     public function setInvoiceLineElement($datas)
     {
+        $this->priceCalculator();
         foreach ($datas as $data) {
+            $subTotal = $this->priceCalculator([$data['unit_price'], '*', $data['quantity']]);
+            $discount = $this->priceCalculator([$data['discount']['rate'], '*', $data['discount']['rate']]);
+            $feeOrCharge = $this->priceCalculator([$subTotal, '*', $data['fee_or_charge']['rate']]);
+            $totalExclusiveTax = $this->priceCalculator([$subTotal, '+', $feeOrCharge, '-', $discount]);
             $invoiceLineElement = [
                 'ID' => [
                     [
@@ -543,7 +548,7 @@ class MyTaxDocumentService
                 ],
                 'InvoicedQuantity' => [
                     [
-                        '_' => $data['quantity'],
+                        '_' => $this->toDecimal($data['quantity']),
                         'unitCode' => $data['unit_code']
                     ]
                 ],
@@ -579,7 +584,7 @@ class MyTaxDocumentService
                     [
                         'Amount' => [
                             [
-                                '_' => $data['subtotal'],
+                                '_' => $subTotal,
                                 'currencyID' => $data['currency_code']
                             ]
                         ]
@@ -587,7 +592,7 @@ class MyTaxDocumentService
                 ],
                 'LineExtensionAmount' => [
                     [
-                        '_' => $data['total_excluding_tax'],
+                        '_' => $totalExclusiveTax,
                         'currencyID' => $data['currency_code']
                     ]
                 ],
@@ -595,7 +600,7 @@ class MyTaxDocumentService
                     [
                         'PriceAmount' => [
                             [
-                                '_' => $data['unit_price'],
+                                '_' => $this->toDecimal($data['unit_price']),
                                 'currencyID' => $data['currency_code']
                             ]
                         ]
@@ -626,13 +631,13 @@ class MyTaxDocumentService
                         ],
                         'Amount' => [
                             [
-                                '_' => $data['discount']['amount'],
+                                '_' => $discount,
                                 'currencyID' => $data['currency_code']
                             ]
                         ],
                         'MultiplierFactorNumeric' => [
                             [
-                                '_' => $data['discount']['rate']
+                                '_' => $this->toDecimal($data['discount']['rate'])
                             ]
                         ]
                     ],
@@ -649,29 +654,38 @@ class MyTaxDocumentService
                         ],
                         'Amount' => [
                             [
-                                '_' => $data['fee_or_charge']['amount'],
+                                '_' => $feeOrCharge,
                                 'currencyID' => $data['currency_code']
                             ]
                         ],
                         'MultiplierFactorNumeric' => [
                             [
-                                '_' => $data['fee_or_charge']['rate']
+                                '_' => $this->toDecimal($data['fee_or_charge']['rate'])
                             ]
                         ]
                     ]
                 ]
             ];
 
+            $taxableAmount = $totalExclusiveTax;
+
+            if (!empty($data['tax_exemption']['amount']) && $data['tax_exemption']['amount'] > 0) {
+                $taxableAmount = $this->priceCalculator([$taxableAmount, '-', $data['tax_exemption']['amount']]);
+            }
+
             $totalTaxAmount = 0;
+            $totalTaxAmountWithoutExemption = 0;
             if (!empty($data['taxes'])) {
                 foreach ($data['taxes'] as $tax) {
                     $taxAmount = 0;
+                    $taxAmountWithoutExemption = 0;
                     if (!empty($tax['tax_rate'])) {
-                        $taxAmount = floatval($data['total_excluding_tax']) * floatval($tax['tax_rate']) / 100;
+                        $taxAmountWithoutExemption = $this->priceCalculator([$totalExclusiveTax, '*', $tax['tax_rate'], '/', 100]);
+                        $taxAmount = $this->priceCalculator([$taxableAmount, '*', $tax['tax_rate'], '/', 100]);
                         $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
                             'Percent' => [
                                 [
-                                    '_' => $tax['tax_rate']
+                                    '_' => $this->toDecimal($tax['tax_rate'])
                                 ]
                             ],
                             'TaxAmount' => [
@@ -682,7 +696,7 @@ class MyTaxDocumentService
                             ],
                             'TaxableAmount' => [
                                 [
-                                    '_' => $data['total_excluding_tax'],
+                                    '_' => $taxAmount,
                                     'currencyID' => $data['currency_code']
                                 ]
                             ],
@@ -708,17 +722,18 @@ class MyTaxDocumentService
                             ]
                         ];
                     } else {
-                        $taxAmount = floatval($tax['per_unit_amount']) * floatval($tax['number_of_unit']);
+                        $taxAmountWithoutExemption = $this->priceCalculator([$tax['per_unit_amount'], '*', $tax['number_of_unit']]);
+                        $taxAmount = $this->priceCalculator([$taxableAmount, '/', $totalExclusiveTax, '*',  $tax['per_unit_amount'], '*', $tax['number_of_unit']]);
                         $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
                             'BaseUnitMeasure' => [
                                 [
-                                    '_' => $tax['number_of_unit'],
+                                    '_' => $this->toDecimal($tax['number_of_unit']),
                                     'unitCode' => $data['unit_code']
                                 ]
                             ],
                             'PerUnitAmount' => [
                                 [
-                                    '_' => $tax['per_unit_amount'],
+                                    '_' => $this->toDecimal($tax['per_unit_amount']),
                                     'currencyID' => $data['currency_code']
                                 ]
                             ],
@@ -729,8 +744,9 @@ class MyTaxDocumentService
                                 ]
                             ],
                             'TaxableAmount' => [
-                                [
-                                    '_' => $data['total_excluding_tax'],
+                                [,
+
+                                    '_' => $taxableAmount,
                                     'currencyID' => $data['currency_code']
                                 ]
                             ],
@@ -757,9 +773,54 @@ class MyTaxDocumentService
                         ];
                     }
                     $totalTaxAmount += $taxAmount;
+                    $totalTaxAmountWithoutExemption += $taxAmountWithoutExemption;
                 }
             }
 
+            $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
+                'TaxAmount' => [
+                    [
+                        '_' => $this->priceCalculator([$totalTaxAmountWithoutExemption, '-', $totalTaxAmount]),
+                        'currencyID' => $data['currency_code']
+                    ]
+                ],
+                'TaxCategory' => [
+                    [
+                        'ID' => [
+                            [
+                                '_' => 'E',
+                            ]
+                        ],
+                        'Percent' => [
+                            [
+                                '_' => 0
+                            ]
+                        ],
+                        'TaxExemptionReason' => [
+                            [
+                                '_' => $data['tax_exemption']['reason']
+                            ]
+                        ],
+                        'TaxScheme' => [
+                            [
+                                'ID' => [
+                                    [
+                                        'schemeAgencyID' => '6',
+                                        'schemeID' => "UN/ECE 5153",
+                                        '_' => 'OTH'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'TaxableAmount' => [
+                    [
+                        '_' => $data['tax_exemption']['amount'],
+                        'currencyID' => $data['currency_code']
+                    ]
+                ]
+            ];
             $invoiceLineElement['TaxTotal'][0]['TaxAmount'][0]['_'] = $totalTaxAmount;
             $this->document['AllowanceCharge'][] = $invoiceLineElement['AllowanceCharge'][0];
             $this->document['InvoiceLine'][] = $invoiceLineElement;
@@ -784,7 +845,6 @@ class MyTaxDocumentService
         $hash = hash('sha256', $minifiedJSON, true);
 
         $docDigest = base64_encode($hash);
-        $this->docDigest = $docDigest;
 
         $sign = openssl_sign($hash, $signature, $privateKey, OPENSSL_ALGO_SHA256);
         if (!$sign) {
@@ -1092,7 +1152,11 @@ class MyTaxDocumentService
                         [
                             'tax_type' => '02', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
                             'tax_rate' => 0.50,
-                        ]
+                        ],
+                    ],
+                    'tax_exemption' => [
+                        'reason' => '',
+                        'amount' => 0,
                     ],
                     'unit_price' => 100.00,
                     'discount' => [
@@ -1107,6 +1171,7 @@ class MyTaxDocumentService
                     ]
                 ]
             ],
+            'is_rounding_adjustment' => false,
         ];
 
         $this->setSupplier($data['supplier']);
@@ -1156,53 +1221,6 @@ class MyTaxDocumentService
             ]
         ];
 
-
-
-        $this->document['LegalMonetaryTotal'][0] = [
-            'LineExtensionAmount' => [
-                [
-                    '_' => $data['line_extension_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'TaxExclusiveAmount' => [
-                [
-                    '_' => $data['tax_exclusive_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'TaxInclusiveAmount' => [
-                [
-                    '_' => $data['tax_inclusive_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'AllowanceTotalAmount' => [
-                [
-                    '_' => $data['allowance_total_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'ChargeTotalAmount' => [
-                [
-                    '_' => $data['charge_total_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'PayableAmount' => [
-                [
-                    '_' => $data['payable_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-            'PayableRoundingAmount' => [
-                [
-                    '_' => $data['payable_rounding_amount'],
-                    'currencyID' => $data['currency_code']
-                ]
-            ],
-        ];
-
         $this->document['PaymentMeans'][0] = [
             'PaymentMeansCode' => [
                 [
@@ -1222,19 +1240,44 @@ class MyTaxDocumentService
         ];
 
         $invoiceLine = $this->document['InvoiceLine'];
+        $totalLineExtensionAmount = 0;
+        $totalAllowanceAmount = 0;
+        $totalChargeAmount = 0;
+
         $totalTaxAmount = 0;
         $taxSubTotal = [];
         foreach ($invoiceLine as $line) {
-            $taxTotal = floatVal($line['TaxTotal'][0]['TaxAmount'][0]['_']);
-            $totalTaxAmount += $taxTotal;
+            $totalTaxAmount = $this->priceCalculator([$totalTaxAmount, '+', $line['TaxTotal'][0]['TaxAmount'][0]['_']]);
+            $totalLineExtensinAmount = $this->priceCalculator([$totalLineExtensionAmount, '+', $line['LineExtensionAmount'][0]['_']]);
+            foreach ($line['AllowanceCharge'] as $allowance) {
+                if ($allowance['ChargeIndicator'][0]['_'] === true)
+                    $totalChargeAmount = $this->priceCalculator([$totalChargeAmount, '+', $allowance['Amount'][0]['_']]);
+                else
+                    $totalAllowanceAmount = $this->priceCalculator([$totalAllowanceAmount, '+', $allowance['Amount'][0]['_']]);
+            }
             foreach ($line['TaxTotal'][0]['TaxSubtotal'] as $subTax) {
-                $taxSubTotal[] = [
-                    'TaxAmount' => $subTax['TaxAmount'],
-                    'TaxCategory' => $subTax['TaxCategory'],
-                    'TaxableAmount' => $subTax['TaxableAmount'],
-                ];
+                if ($subTax['TaxAmount'][0]['_'] > 0) {
+                    $taxSubTotal[] = [
+                        'TaxAmount' => $subTax['TaxAmount'],
+                        'TaxCategory' => $subTax['TaxCategory'],
+                        'TaxableAmount' => $subTax['TaxableAmount'],
+                    ];
+                }
             }
         }
+
+        $taxInclusiveAmount = $this->priceCalculator([$totalLineExtensionAmount, '+', $totalTaxAmount]);
+        $payableAmountWithoutRounding = $taxInclusiveAmount;
+
+        $payableAmount = $payableAmountWithoutRounding;
+        $payableRoundingAmount = 0;
+
+        if ($data['is_rounding_adjustment']) {
+            $payableAmountWithRounding = $this->getRoundingAmount($payableAmountWithoutRounding);
+            $payableRoundingAmount = $this->priceCalculator([$payableAmountWithRounding, '-', $payableAmountWithoutRounding]);
+            $payableAmount = $payableAmountWithRounding;
+        }
+
 
         $this->document['TaxTotal'][0] = [
             'TaxAmount' => [
@@ -1244,6 +1287,52 @@ class MyTaxDocumentService
                 ]
             ],
             'TaxSubtotal' => $taxSubTotal
+        ];
+
+
+        $this->document['LegalMonetaryTotal'][0] = [
+            'LineExtensionAmount' => [
+                [
+                    '_' => $totalLineExtensionAmount,,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'TaxExclusiveAmount' => [
+                [
+                    '_' => $totalLineExtensionAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'TaxInclusiveAmount' => [
+                [
+                    '_' => $taxInclusiveAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'AllowanceTotalAmount' => [
+                [
+                    '_' => $totalAllowanceAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'ChargeTotalAmount' => [
+                [
+                    '_' => $totalChargeAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'PayableAmount' => [
+                [
+                    '_' => $payableAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
+            'PayableRoundingAmount' => [
+                [
+                    '_' => $payableRoundingAmount,
+                    'currencyID' => $data['currency_code']
+                ]
+            ],
         ];
 
 
@@ -1269,5 +1358,31 @@ class MyTaxDocumentService
             'document_base64' => base64_encode($documentEncoded),
             'document_sha256' => hash('sha256', $documentEncoded),
         ];
+    }
+
+    private function getRoundingAmount($amount)
+    {
+        $cents = $amount * 100;
+        $remainder = $cents % 5;
+
+        if ($remainder < 2.5) {
+            $roundedCents = $cents - $remainder;
+        } else {
+            $roundedCents = $cents + (5 - $remainder);
+        }
+        return $roundedCents / 100;
+    }
+
+    private function toDecimal($value)
+    {
+        return $value;
+        // return (float)number_format($value, 2);
+    }
+    private function priceCalculator($formulars = [], $isDecimal = true)
+    {
+        $formularStr = implode(' ', $formulars);
+        $result = eval("return $formularStr;");
+        // return (float)($isDecimal ? $this->toDecimal($result) : $result);
+        return (float)$result;
     }
 }
