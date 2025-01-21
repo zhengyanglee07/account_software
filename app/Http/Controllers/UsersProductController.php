@@ -196,6 +196,8 @@ class UsersProductController extends Controller
             'meta_description' => $request->input('seo.description') ?? null,
             'access_period' => $request->input('details.coursePeriod') ?? null,
             'asset_url' => $request->input('details.asset_url') ?? null,
+            'classification_code' => $request->input('details.classification_code') ?? null,
+            'unit_type' => $request->input('details.unit_type') ?? null,
         ]);
 
         // if($productNameChanged) {
@@ -594,6 +596,11 @@ class UsersProductController extends Controller
         $activeSaleChannels = $appSaleChannel->getActiveSaleChannels($currentAccountId);
         $paginatedContacts = (new ProcessedContactService)->getPaginatedContacts();
         if (!str_contains(url()->current(), 'onboarding'))
+            $unitTypePath = storage_path() . "/json/item_unit_types.json";
+            $classificationCodePath = storage_path() . "/json/item_classification_codes.json";
+
+            $unitTypes = json_decode(file_get_contents($unitTypePath), true);
+            $classificationCodes = json_decode(file_get_contents($classificationCodePath), true);
             return Inertia::render('product/pages/AddProductPage', compact(
                 'currency',
                 'product',
@@ -618,6 +625,8 @@ class UsersProductController extends Controller
                 'productCourseStudentIds',
                 'paginatedAccessList',
                 'productAccessListIds',
+                'unitTypes',
+                'classificationCodes',
             ));
         return Inertia::render('onboarding/pages/Product', compact('currency',));
     }

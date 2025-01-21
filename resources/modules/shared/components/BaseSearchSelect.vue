@@ -4,11 +4,11 @@
       v-model="value"
       :options="options"
       :placeholder="placeholder"
-      :label="label"
+      :label="labelKey"
       :track-by="trackBy"
-      :custom-label="customLabel"
       :disabled="disabled || options.length === 0"
       :open-direction="openDirection"
+      :selectLabel="''"
     ></Multiselect>
   </div>
 </template>

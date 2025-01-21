@@ -669,7 +669,8 @@ class MyTaxDocumentService
 
             $taxableAmount = $totalExclusiveTax;
 
-            if (!empty($data['tax_exemption']['amount']) && $data['tax_exemption']['amount'] > 0) {
+            $hasTaxExemption = !empty($data['tax_exemption']['amount']) && $data['tax_exemption']['amount'] > 0;
+            if ($hasTaxExemption) {
                 $taxableAmount = $this->priceCalculator([$taxableAmount, '-', $data['tax_exemption']['amount']]);
             }
 
@@ -696,7 +697,7 @@ class MyTaxDocumentService
                             ],
                             'TaxableAmount' => [
                                 [
-                                    '_' => $taxAmount,
+                                    '_' => $taxableAmount,
                                     'currencyID' => $data['currency_code']
                                 ]
                             ],
@@ -778,50 +779,52 @@ class MyTaxDocumentService
                 }
             }
 
-            $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
-                'TaxAmount' => [
-                    [
-                        '_' => $this->priceCalculator([$totalTaxAmountWithoutExemption, '-', $totalTaxAmount]),
-                        'currencyID' => $data['currency_code']
-                    ]
-                ],
-                'TaxCategory' => [
-                    [
-                        'ID' => [
-                            [
-                                '_' => 'E',
-                            ]
-                        ],
-                        'Percent' => [
-                            [
-                                '_' => 0
-                            ]
-                        ],
-                        'TaxExemptionReason' => [
-                            [
-                                '_' => $data['tax_exemption']['reason']
-                            ]
-                        ],
-                        'TaxScheme' => [
-                            [
-                                'ID' => [
-                                    [
-                                        'schemeAgencyID' => '6',
-                                        'schemeID' => "UN/ECE 5153",
-                                        '_' => 'OTH'
+            if ($hasTaxExemption) {
+                $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
+                    'TaxAmount' => [
+                        [
+                            '_' => $this->priceCalculator([$totalTaxAmountWithoutExemption, '-', $totalTaxAmount]),
+                            'currencyID' => $data['currency_code']
+                        ]
+                    ],
+                    'TaxCategory' => [
+                        [
+                            'ID' => [
+                                [
+                                    '_' => 'E',
+                                ]
+                            ],
+                            'Percent' => [
+                                [
+                                    '_' => 0
+                                ]
+                            ],
+                            'TaxExemptionReason' => [
+                                [
+                                    '_' => $data['tax_exemption']['reason']
+                                ]
+                            ],
+                            'TaxScheme' => [
+                                [
+                                    'ID' => [
+                                        [
+                                            'schemeAgencyID' => '6',
+                                            'schemeID' => "UN/ECE 5153",
+                                            '_' => 'OTH'
+                                        ]
                                     ]
                                 ]
                             ]
                         ]
+                    ],
+                    'TaxableAmount' => [
+                        [
+                            '_' => $data['tax_exemption']['amount'],
+                            'currencyID' => $data['currency_code']
+                        ]
                     ]
-                ],
-                'TaxableAmount' => [
-                    [
-                        '_' => $data['tax_exemption']['amount'],
-                        'currencyID' => $data['currency_code']
-                    ]
-                ]
-            ];
+                ];
+            }
             $invoiceLineElement['TaxTotal'][0]['TaxAmount'][0]['_'] = $totalTaxAmount;
             $this->document['AllowanceCharge'][] = $invoiceLineElement['AllowanceCharge'][0];
             $this->document['InvoiceLine'][] = $invoiceLineElement;
@@ -1124,13 +1127,6 @@ class MyTaxDocumentService
                 'start_date' => '',
                 'end_date' => ''
             ],
-            'line_extension_amount' => 100.00,
-            'tax_exclusive_amount' => 100.00,
-            'tax_inclusive_amount' => 106.00,
-            'allowance_total_amount' => 0.00,
-            'charge_total_amount' => 0.00,
-            'payable_amount' => 106.00,
-            'payable_rounding_amount' => 0.00,
             'payment_mode' => '01',
             'supplier_bank_account_number' => '',
             'invoice_line' => [
@@ -1141,9 +1137,7 @@ class MyTaxDocumentService
                     'commodity_classification_code' => '030', //https://sdk.myinvois.hasil.gov.my/codes/classification-codes/
                     'description' => 'Software Development',
                     'origin_country' => '',
-                    'subtotal' => 100.00,
                     'currency_code' => 'MYR',
-                    'total_excluding_tax' => 100.00,
                     'taxes' => [
                         [
                             'tax_type' => '01', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
@@ -1249,7 +1243,7 @@ class MyTaxDocumentService
         $taxSubTotal = [];
         foreach ($invoiceLine as $line) {
             $totalTaxAmount = $this->priceCalculator([$totalTaxAmount, '+', $line['TaxTotal'][0]['TaxAmount'][0]['_']]);
-            $totalLineExtensinAmount = $this->priceCalculator([$totalLineExtensionAmount, '+', $line['LineExtensionAmount'][0]['_']]);
+            $totalLineExtensionAmount = $this->priceCalculator([$totalLineExtensionAmount, '+', $line['LineExtensionAmount'][0]['_']]);
             foreach ($line['AllowanceCharge'] as $allowance) {
                 if ($allowance['ChargeIndicator'][0]['_'] === true)
                     $totalChargeAmount = $this->priceCalculator([$totalChargeAmount, '+', $allowance['Amount'][0]['_']]);

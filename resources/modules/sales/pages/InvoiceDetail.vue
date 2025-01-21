@@ -45,10 +45,83 @@
             />
           </BaseFormGroup>
         </BaseCard>
+
+        <BaseCard has-header has-footer :title="`Items`">
+          <BaseDatatable
+            title="items"
+            :table-headers="ITEMS_TABLE_HEADERS"
+            :table-datas="[
+              {
+                title: 'Item 1',
+                classification_code: '004',
+                quantity: 1,
+                unit_price: 100,
+                amount: 100,
+                discount: 0,
+                taxes: [
+                  {
+                    taxType: '',
+                    numberOfUnits: 0,
+                    ratePerUnit: 0,
+                    taxRate: 0,
+                    taxAmount: 0,
+                  }
+                ]
+              },
+            ]"
+            no-header
+            no-action
+            no-responsive
+          >
+            <template #cell-classification_code="{ row }">
+              <BaseMultiSelect
+                v-model="row.classification_code"
+                :options="classificationCodes"
+                label="Description"
+                :reduce="(option) => option.Code"
+              />
+            </template>
+            <template #cell-quantity="{ row }">
+              <div class="d-flex">
+                <BaseFormInput
+                  v-model="row.quantity"
+                  type="number"
+                  style="width: 20%"
+                />
+                <BaseMultiSelect
+                  v-model="row.unit_type"
+                  :options="unitTypes"
+                  label="Name"
+                  :reduce="(option) => option.Code"
+                  style="width: 100%"
+                />
+              </div>
+            </template>
+            <template #cell-unit_price="{ row }">
+              <BaseFormInput v-model="row.unit_price" type="number" />
+            </template>
+            <template #cell-discount="{ row }">
+              <div class="d-flex align-items-center">
+                <BaseFormInput v-model="row.discount" type="number" />%
+              </div>
+            </template>
+            <template #cell-tax_code="{ row }">
+              <BaseFormInput
+                @click="
+                  openModal(ADD_TAX_MODAL_ID, () => {
+                    setItemTaxes(row.taxes);
+                  })
+                "
+                type="number"
+              />
+            </template>
+          </BaseDatatable>
+        </BaseCard>
       </template>
       <template #right>
         <BaseCard>
           <BaseFormGroup label="Add Customer">
+            }
             <BaseMultiSelect
               placeholder="Search customers"
               :filter="fuseSearch"
@@ -98,13 +171,18 @@
     :countries="countries"
     :states="states"
   />
-  <BaseButton @click="openModal">Open Modal</BaseButton>
+  <ItemTaxModal
+    :modal-id="ADD_TAX_MODAL_ID"
+    :tax-types="taxTypes"
+    :item-taxes="itemTaxes"
+  />
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue';
 import BaseOrderPageLayout from '@shared/layout/BaseOrderPageLayout.vue';
 import ContactDetailModal from '@people/components/ContactDetailModal.vue';
+import ItemTaxModal from '@product/components/ItemTaxModal.vue';
 import { Modal } from 'bootstrap';
 
 const props = defineProps({
@@ -120,13 +198,31 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  classificationCodes: {
+    type: Array,
+    default: () => [],
+  },
+  unitTypes: {
+    type: Array,
+    default: () => [],
+  },
+  taxTypes: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const ADD_CONTACT_MODAL_ID = 'AddContanctModal';
+const ADD_TAX_MODAL_ID = 'AddTaxModal';
 const ITEMS_TABLE_HEADERS = [
-  { name: 'Item', key: 'Title' }
-}
-]
+  { name: 'Item', key: 'title' },
+  { name: 'Classification Code', key: 'classification_code', custom: true },
+  { name: 'Quantity', key: 'quantity', custom: true },
+  { name: 'Unit Price', key: 'unit_price', custom: true },
+  { name: 'Amount', key: 'amount' },
+  { name: 'Discount', key: 'discount', custom: true },
+  { name: 'Tax', key: 'tax_code', custom: true },
+];
 
 const val = ref('');
 const form = reactive({
@@ -147,7 +243,6 @@ const form = reactive({
   date: '2025-01-09',
   currency_code: 'MYR',
   exchange_rate: 1,
-  tax_mode: 'exclusive',
   form_items: [
     {
       id: 1,
@@ -164,6 +259,15 @@ const form = reactive({
       discount: null,
       tax_code_id: 1,
       classification_code: null,
+      taxes: [
+        {
+          taxType: '',
+          numberOfUnits: 0,
+          ratePerUnit: 0,
+          taxRate: 0,
+          taxAmount: 0,
+        },
+      ],
     },
   ],
   rounding_on: null,
@@ -188,8 +292,13 @@ const form = reactive({
   incoterms: null,
   allow_intercept: true,
 });
+const itemTaxes = ref([]);
 
-const openModal = (modalId) => {
+const setItemTaxes = (taxes) => {
+  itemTaxes.value = taxes;
+};
+const openModal = (modalId, callback = () => {}) => {
+  callback();
   const modalInstance = Modal.getInstance(document.getElementById(modalId));
   modalInstance.show();
 };
@@ -201,7 +310,7 @@ const addContact = () => {
 const fuseSearch = (options, search) =>
   search.length
     ? options.filter(
-      (e) => e.fname?.includes(search) || e.email?.includes(search)
-    )
+        (e) => e.fname?.includes(search) || e.email?.includes(search)
+      )
     : options;
 </script>

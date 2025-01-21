@@ -193,8 +193,36 @@
       />
       <!-- end-inventory -->
 
+      <!-- classification code -->
+      <BaseCard has-header title="Classification Code">
+        <BaseFormGroup col="6" label="Classification Code" required>
+          <BaseMultiSelect
+            v-model="productDetails.classification_code"
+            :options="classificationCodes.sort((a, b) => a.Description.localeCompare(b.Description))"
+            label="Description"
+            :reduce="(option) => option.Code"
+          />
+        </BaseFormGroup>
+      </BaseCard>
+      <!-- end-classification code -->
+
+      <!-- unit of measurements -->
+      <BaseCard has-header title="Unit of Measurements">
+        <BaseFormGroup col="6" label="Base Unit Label" required>
+         <BaseMultiSelect
+            v-model="productDetails.unit_type"
+            :options="unitTypes.sort((a, b) => a.Name.localeCompare(b.Name))"
+            label="Name"
+            :reduce="(option) => option.Code"
+        />
+        </BaseFormGroup>
+      </BaseCard>
+      <!-- end-unit of measurements -->
+
+
+
       <!-- variant -->
-      <BaseCard v-if="!isCourse" has-header has-toolbar title="Variations">
+      <BaseCard v-if="false &&!isCourse" has-header has-toolbar title="Variations">
         <BaseFormGroup
           :label="
             !variantOptionValueArrayForDatatable.length
@@ -319,7 +347,7 @@
       <!-- end-variant -->
 
       <!-- product seo setting  -->
-      <BaseCard has-header has-toolbar title="Search Engine Optimization">
+      <BaseCard v-if="false" has-header has-toolbar title="Search Engine Optimization">
         <BaseFormGroup v-if="seo.title">
           <p
             style="
@@ -585,6 +613,8 @@ export default {
     'productCourseStudentIds',
     'paginatedAccessList',
     'productAccessListIds',
+    'unitTypes',
+    'classificationCodes',
   ],
 
   data() {
@@ -623,6 +653,8 @@ export default {
         courseStudent: [],
         type: '',
         asset_url: '',
+        classification_code: '',
+        unit_type: '',
       },
       productImageArray: [],
       hasProductVariation: true,
@@ -1731,6 +1763,8 @@ export default {
         coursePeriod: JSON.parse(this.product.access_period ?? '{}'),
         courseStudent: this.paginatedCourseStudent ?? [],
         asset_url: this.product.asset_url ?? '',
+        classification_code: this.product.classification_code ?? '',
+        unit_type: this.product.unit_type ?? '',
       };
       this.seo.title = product.meta_title || `${this.product.productTitle}`;
       this.seo.description = this.product.meta_description;

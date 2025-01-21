@@ -128,6 +128,7 @@ const proxyValue = computed({
 
 .base-multi-select .vs__search {
   margin: 0;
+  display: none;
 }
 
 .base-multi-select .vs__actions {

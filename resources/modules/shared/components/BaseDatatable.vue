@@ -1,4 +1,4 @@
-<template>
+base<template>
   <BaseEmptyData
     v-if="tableDatas.length === 0 && !(isServerSideSearch && search)"
     :title="title"
@@ -31,13 +31,13 @@
           @search="clearSearchQuery($event.target.value)"
           @keyup.enter="isServerSideSearch && triggerBackendFilterAndSorting()"
         >
-        <small 
+        <small
           v-if="search && isServerSideSearch"
           class="mb-0 ms-2 text-muted fst-italic"
         >
-          Press 
-          <code>Enter</code> 
-          to search 
+          Press
+          <code>Enter</code>
+          to search
         </small>
       </div>
     </template>
@@ -54,6 +54,7 @@
       :style="{
         maxHeight: maxHeight,
         'overflow-y': maxHeight ? 'scroll' : 'auto',
+        overflow: noResponsive ? 'unset' : '',
       }"
     >
       <table
@@ -188,8 +189,8 @@
           </template>
         </tbody>
       </table>
-      <p 
-        v-else 
+      <p
+        v-else
         class="text-center mb-0"
       >
         No results found. Try to change the search keywords or
@@ -387,6 +388,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  noResponsive: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -557,7 +562,7 @@ const sortColumn = (
       default:
         headers.value[index].sortOrder = 'asc';
     }
-  
+
     sortColumnIndex.value = index;
     triggerBackendFilterAndSorting();
     return;
