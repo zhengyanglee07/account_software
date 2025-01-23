@@ -116,7 +116,10 @@
       </template>
 
       <template #footer>
-        <BaseButton type="primary" @click="submitDocument">Save</BaseButton>
+        <BaseButton type="primary" @click="submitDocument" :disabled="isLoading">
+          <i v-if="isLoading" class="fas fa-spinner fa-pulse" />
+          <span v-else>Submit</span>
+        </BaseButton>
       </template>
     </BaseOrderPageLayout>
   </BasePageLayout>
@@ -371,17 +374,28 @@ const summaries = computed(() => [
   },
 ]);
 
+const isLoading = ref(false);
 const submitDocument = () => {
-  axios.post('/sales/invoices/submit', form).then((res) => {
-    console.log(res);
-    const data = res.data;
-    if (data.rejectedDocuments.length > 0) {
-      $toast.error('Error', `${data.rejectedDocuments[0].error.message}`);
-    }
-    if (data.acceptedDocuments.length > 0) {
-      $toast.success('Document submitted successfully');
-    }
-  });
+  isLoading.value = true;
+  axios
+    .post('/sales/invoices/submit', form)
+    .then((res) => {
+      console.log(res);
+      const data = res.data;
+      if (data.rejectedDocuments.length > 0) {
+        $toast.error('Error', `${data.rejectedDocuments[0].error.message}`);
+      }
+      if (data.acceptedDocuments.length > 0) {
+        $toast.success('Success', 'Document submitted successfully');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      $toast.error('Error', 'Failed to submit document');
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 };
 
 // temp for init
