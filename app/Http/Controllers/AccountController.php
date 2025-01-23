@@ -492,23 +492,29 @@ class AccountController extends Controller
         $msicCodePath = storage_path() . "/json/msic_code.json";
         $msicCodes = json_decode(file_get_contents($msicCodePath), true);
 
-        $account = Account::select(
-            'company_logo',
-            'favicon',
-            'store_name',
-            'company',
-            'address',
-            'country',
-            'city',
-            'state',
-            'zip',
-            'accountName',
-            'currency',
-            'timeZone',
-        )->find(Auth::user()->currentAccountId);
+        // $account = Account::select(
+        //     'company_logo',
+        //     'favicon',
+        //     'store_name',
+        //     'company',
+        //     'address',
+        //     'country',
+        //     'city',
+        //     'state',
+        //     'zip',
+        //     'accountName',
+        //     'currency',
+        //     'timeZone',
+        // )->find(Auth::user()->currentAccountId);
+        $countryPath = storage_path() . "/json/countries.json";
+        $statePath = storage_path() . "/json/my_states.json";
 
+        $countries = json_decode(file_get_contents($countryPath), true);
+        $states = json_decode(file_get_contents($statePath), true);
 
-        return Inertia::render('setting/pages/AccountSettings', compact('account', 'msicCodes'));
+        $account = Account::with('accountAddress')->find(Auth::user()->currentAccountId);
+
+        return Inertia::render('setting/pages/AccountSettings', compact('account', 'msicCodes', 'countries', 'states'));
     }
 
     public function updateTimezone(Request $request)

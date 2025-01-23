@@ -342,11 +342,8 @@ Route::group([
         Route::prefix('sales')->group(function () {
             Route::get('/invoices', 'showAllInvoicePage');
             Route::get('/invoices/new', 'showInvoiceDetailPage');
-            Route::post('/setting/save', 'saveSalesSetting');
-            Route::post('/setting/country/save', 'saveSalesCountrySetting');
-            Route::delete('/setting/delete/{id}', 'deleteSalesRegion');
-            Route::get('/settings/edit/{id}', 'addNewSales');
-            Route::get('/settings/{id}', 'addNewSales');
+            Route::post('/contact/save', 'saveContact');
+            Route::post('invoices/submit', 'submitDocument');
         });
     });
 

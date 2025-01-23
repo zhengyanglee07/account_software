@@ -64,7 +64,7 @@ base<template>
           'table-hover': !noAction && !noHover,
         }"
       >
-        <thead v-if="!!headers">
+        <thead v-if="!!headers && !noTableHeader">
           <tr
             class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0"
             role="row"
@@ -389,6 +389,10 @@ const props = defineProps({
     default: true,
   },
   noResponsive: {
+    type: Boolean,
+    default: false,
+  },
+  noTableHeader: {
     type: Boolean,
     default: false,
   },

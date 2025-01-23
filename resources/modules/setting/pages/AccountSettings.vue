@@ -1,9 +1,5 @@
 <template>
-  <BasePageLayout
-    page-name="Account Settings"
-    back-to="/settings/all"
-    is-setting
-  >
+  <BasePageLayout page-name="Account Settings" back-to="/settings/all" is-setting>
     <BaseSettingLayout title="Company Information">
       <template #description> Information related to your company. </template>
 
@@ -22,97 +18,36 @@
           <BaseFormInput v-model="form.reg_no" id="f_regNo" type="text" />
         </BaseFormGroup>
 
-        <BaseFormGroup
-          col="6"
-          for="f_oldRegNo"
-          label="Old Registration No."
-          required
-        >
-          <BaseFormInput
-            v-model="form.old_reg_no"
-            id="f_oldRegNo"
-            type="text"
-          />
+        <BaseFormGroup col="6" for="f_oldRegNo" label="Old Registration No." required>
+          <BaseFormInput v-model="form.old_reg_no" id="f_oldRegNo" type="text" />
         </BaseFormGroup>
-        <BaseFormGroup
-          col="6"
-          for="f_sstRegNo"
-          label="SST Registration No."
-          required
-        >
-          <BaseFormInput
-            v-model="form.sst_reg_no"
-            id="f_sstRegNo"
-            type="text"
-          />
+        <BaseFormGroup col="6" for="f_sstRegNo" label="SST Registration No." required>
+          <BaseFormInput v-model="form.sst_reg_no" id="f_sstRegNo" type="text" />
         </BaseFormGroup>
 
-        <BaseFormGroup
-          col="6"
-          for="f_msicCode"
-          label="MSIC Code"
-          @click="openModal(MSIC_CODE_MODAL_ID)"
-          required
-        >
-          <BaseFormInput
-            v-model="form.msic_code_description"
-            id="f_msicCode"
-            type="text"
-          />
+        <BaseFormGroup col="6" for="f_msicCode" label="MSIC Code" @click="openModal(MSIC_CODE_MODAL_ID)" required>
+          <BaseFormInput v-model="form.msic_code_description" id="f_msicCode" type="text" />
         </BaseFormGroup>
-        <BaseFormGroup
-          col="6"
-          for="f_"
-          label="Tourism Tax Registration No."
-          required
-        >
-          <BaseFormInput
-            v-model="form.tourism_tax_reg_no"
-            id="f_sstRegNo"
-            type="text"
-          />
+        <BaseFormGroup col="6" for="f_" label="Tourism Tax Registration No." required>
+          <BaseFormInput v-model="form.tourism_tax_reg_no" id="f_sstRegNo" type="text" />
         </BaseFormGroup>
       </template>
     </BaseSettingLayout>
 
     <BaseSettingLayout title="Company Contact">
-      <template #description
-        >The contact information for your company.</template
-      >
+      <template #description>The contact information for your company.</template>
 
       <template #content>
         <BaseFormGroup col="6" for="f_contact_no" label="Contact No." required>
-          <BaseFormTelInput
-            v-model="form.contact_no"
-            :name="'phone_number'"
-            :input-id="'f_contact_no'"
-          />
+          <BaseFormTelInput v-model="form.contact_no" :name="'phone_number'" :input-id="'f_contact_no'" />
         </BaseFormGroup>
-        <BaseFormGroup
-          col="6"
-          for="f_contact_email"
-          label="Email Address"
-          required
-        >
-          <BaseFormInput
-            id="f_contact_email"
-            v-model="form.contact_email"
-            type="email"
-          />
+        <BaseFormGroup col="6" for="f_contact_email" label="Email Address" required>
+          <BaseFormInput id="f_contact_email" v-model="form.contact_email" type="email" />
         </BaseFormGroup>
 
-        <BaseFormGroup
-          col="12"
-          label="Website URL"
-          for="f_website_url"
-          required
-        >
+        <BaseFormGroup col="12" label="Website URL" for="f_website_url" required>
           <BaseButtonGroup v-model="form.website_url" />
-          <BaseFormInput
-            v-model="form.website_url"
-            id="f_website_url"
-            type="text"
-          />
+          <BaseFormInput v-model="form.website_url" id="f_website_url" type="text" />
         </BaseFormGroup>
       </template>
 
@@ -124,127 +59,49 @@
     </BaseSettingLayout>
 
     <BaseSettingLayout title="Company Addresses">
-      <template #description
-        >The contact information for your company.</template
-      >
+      <template #description>The contact information for your company.</template>
 
       <template #content>
         <template v-for="(address, index) in form.addresses" :key="index">
-          <BaseFormGroup
-            col="11"
-            :for="`f_address_name_${index}`"
-            label="Address Name"
-            required
-          >
-            <BaseFormInput
-              v-model="address.name"
-              :id="`f_address_name_${index}`"
-              type="text"
-            />
+          <BaseFormGroup col="11" :for="`f_address_name_${index}`" label="Address Name" required>
+            <BaseFormInput v-model="address.name" :id="`f_address_name_${index}`" type="text" />
           </BaseFormGroup>
           <BaseFormGroup col="1" label="&nbsp;">
-            <BaseButton
-              type="none"
-              has-delete-icon
-              @click="removeAddress(index)"
-              p-2
-            ></BaseButton>
+            <BaseButton type="none" has-delete-icon @click="removeAddress(index)" p-2></BaseButton>
           </BaseFormGroup>
 
-          <BaseFormGroup
-            col="12"
-            :for="`f_address_${index}`"
-            label="Address"
-            required
-          >
-            <BaseFormInput
-              v-model="address.address1"
-              :id="`f_address_${index}`"
-              type="text"
-            />
+          <BaseFormGroup col="12" :for="`f_address_${index}`" label="Address" required>
+            <BaseFormInput v-model="address.address1" :id="`f_address_${index}`" type="text" />
           </BaseFormGroup>
           <BaseFormGroup col="6" :for="`f_city_${index}`" label="City" required>
-            <BaseFormInput
-              v-model="address.city"
-              :id="`f_city_${index}`"
-              type="text"
-            />
+            <BaseFormInput v-model="address.city" :id="`f_city_${index}`" type="text" />
           </BaseFormGroup>
 
           <BaseFormGroup col="6" :for="`f_zip_${index}`" label="Zip" required>
-            <BaseFormInput
-              v-model="address.zip"
-              :id="`f_zip_${index}`"
-              type="text"
-            />
+            <BaseFormInput v-model="address.zip" :id="`f_zip_${index}`" type="text" />
           </BaseFormGroup>
-          <BaseFormGroup
-            col="6"
-            :for="`f_country_${index}`"
-            label="Country"
-            required
-          >
-            <BaseFormSelect
-              v-model="address.country_code"
-              :id="`f_country_#${index}`"
-              :options="props.countries"
-              label-key="name"
-              value-key="a3_code"
-            />
+          <BaseFormGroup col="6" :for="`f_country_${index}`" label="Country" required>
+            <BaseFormSelect v-model="address.country_code" :id="`f_country_#${index}`" :options="props.countries"
+              label-key="name" value-key="a3_code" />
           </BaseFormGroup>
-          <BaseFormGroup
-            col="6"
-            :for="`f_state_${index}`"
-            label="State"
-            required
-          >
-            <BaseFormSelect
-              v-if="address.country_code === 'MYS'"
-              v-model="form.addresses[0].state"
-              :id="`f_state_${index}`"
-              :options="props.states"
-              label-key="name"
-              value-key="code"
-            />
-            <BaseFormInput
-              v-else
-              v-model="address.state"
-              id="f_state"
-              type="text"
-            />
+          <BaseFormGroup col="6" :for="`f_state_${index}`" label="State" required>
+            <BaseFormSelect v-if="address.country_code === 'MYS'" v-model="form.addresses[0].state"
+              :id="`f_state_${index}`" :options="props.states" label-key="name" value-key="code" />
+            <BaseFormInput v-else v-model="address.state" id="f_state" type="text" />
           </BaseFormGroup>
-          <BaseFormGroup
-            col="6"
-            :for="`f_defaultBilling_${index}`"
-            label="Default Billing"
-            required
-          >
-            <BaseFormCheckBox
-              v-model="address.is_default_billing"
-              @change="handleDefaultChange('billing', index)"
-              :id="`f_defaultBilling_${index}`"
-              :value="true"
-            />
+          <BaseFormGroup col="6" :for="`f_defaultBilling_${index}`" label="Default Billing" required>
+            <BaseFormCheckBox v-model="address.is_default_billing" @change="handleDefaultChange('billing', index)"
+              :id="`f_defaultBilling_${index}`" :value="true" />
           </BaseFormGroup>
-          <BaseFormGroup
-            col="6"
-            :for="`f_defaultShipping_${index}`"
-            label="Default Shipping"
-          >
-            <BaseFormCheckBox
-              v-model="address.is_default_shipping"
-              @change="handleDefaultChange('shipping', index)"
-              :id="`f_defaultShipping_${index}`"
-              :value="true"
-            />
+          <BaseFormGroup col="6" :for="`f_defaultShipping_${index}`" label="Default Shipping">
+            <BaseFormCheckBox v-model="address.is_default_shipping" @change="handleDefaultChange('shipping', index)"
+              :id="`f_defaultShipping_${index}`" :value="true" />
           </BaseFormGroup>
         </template>
       </template>
 
       <template #footer>
-        <BaseButton has-add-icon type="link" @click="addAddress"
-          >Add Address</BaseButton
-        >
+        <BaseButton has-add-icon type="link" @click="addAddress">Add Address</BaseButton>
       </template>
     </BaseSettingLayout>
 
@@ -253,16 +110,9 @@
 
       <template #content>
         <BaseFormGroup col="6" for="f_company_logo" required>
-          <BaseImagePreview
-            style="height: 100%"
-            size="lg"
-            :image-u-r-l="
-              form.company_logo ||
-              'https://media.hypershapes.com/images/hypershapes-favicon.png'
-            "
-            @delete="form.company_logo = ''"
-            @click="sectionType = 'companyLogo'"
-          />
+          <BaseImagePreview style="height: 100%" size="lg" :image-u-r-l="form.company_logo ||
+            'https://media.hypershapes.com/images/hypershapes-favicon.png'
+            " @delete="form.company_logo = ''" @click="sectionType = 'companyLogo'" />
         </BaseFormGroup>
       </template>
     </BaseSettingLayout>
@@ -272,11 +122,7 @@
     </template>
   </BasePageLayout>
 
-  <MSICCodeModal
-    :modal-id="MSIC_CODE_MODAL_ID"
-    :msic-codes="msicCodes"
-    @change="handleMSCICodeSelect"
-  />
+  <MSICCodeModal :modal-id="MSIC_CODE_MODAL_ID" :msic-codes="msicCodes" @change="handleMSCICodeSelect" />
 
   <ImageUploader @update-value="chooseImage" />
 </template>
@@ -289,9 +135,29 @@ import ImageUploader from '@shared/components/ImageUploader.vue';
 import eventBus from '@services/eventBus.js';
 import axios from 'axios';
 
+const REG_TYPE = [
+  { label: 'None', value: 'none' },
+  { label: 'NRIC', value: 'NRIC' },
+  { label: 'BRN', value: 'BRN' },
+  { label: 'PASSPORT', value: 'PASSPORT' },
+  { label: 'ARMY', value: 'ARMY' },
+];
+
 const MSIC_CODE_MODAL_ID = 'MSICCodeModal';
 
 const props = defineProps({
+  countries: {
+    type: Array,
+    required: true,
+  },
+  states: {
+    type: Array,
+    required: true,
+  },
+  account: {
+    type: Object,
+    required: true,
+  },
   msicCodes: {
     type: Array,
     required: true,
@@ -311,19 +177,21 @@ const DEFAULT_ADDRESS = {
 };
 
 const form = reactive({
-  company: '',
-  tax_id_no: '',
-  reg_no_type: '',
-  reg_no: '',
-  old_reg_no: '',
-  msic_code: '',
-  msic_code_description: '',
-  tourism_tax_reg_no: '',
-  contact_no: '',
-  contact_email: '',
-  website_url: '',
-  addresses: [{ ...DEFAULT_ADDRESS }],
-  company_logo: '',
+  company: props.account.company,
+  tax_id_no: props.account.tax_id_no,
+  reg_no_type: props.account.reg_no_type ?? 'NRIC',
+  reg_no: props.account.reg_no,
+  old_reg_no: props.account.old_reg_no,
+  msic_code: props.account.msic_code,
+  msic_code_description: props.account.msic_code_description,
+  tourism_tax_reg_no: props.account.tourism_tax_reg_no,
+  contact_no: props.account.contact_no,
+  contact_email: props.account.contact_email,
+  website_url: props.account.website_url,
+  addresses: props.account.account_address.length
+    ? props.account.account_address
+    : [{ ...DEFAULT_ADDRESS }],
+  company_logo: props.account.company_logo,
 });
 const sectionType = ref('companyLogo');
 

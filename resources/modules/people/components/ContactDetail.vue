@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, sameAs } from '@vuelidate/validators';
 
@@ -98,6 +98,28 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+});
+
+const DEFAULT_ADDRESS = {
+  name: '',
+  address1: '',
+  city: '',
+  zip: '',
+  country_code: '',
+  state: '',
+  is_default_billing: false,
+  is_default_shipping: false,
+};
+
+const emits = defineEmits(['update:modelValue']);
+
+const form = computed({
+  get: () => props.modelValue,
+  set: (value) => emits('update:modelValue', value),
 });
 
 const formRules = {
@@ -140,44 +162,17 @@ const REG_TYPE = [
   { label: 'ARMY', value: 'ARMY' },
 ];
 
-const DEFAULT_ADDRESS = {
-  name: '',
-  address1: '',
-  city: '',
-  zip: '',
-  country_code: '',
-  state: '',
-  is_default_billing: false,
-  is_default_shipping: false,
-};
-const form = reactive({
-  // basic information
-  name: '',
-  entity_type: 'company',
-  tax_id_no: '',
-  reg_no_type: 'NRIC',
-  reg_no: '',
-  old_reg_no: '',
-  sst_reg_no: '',
-  // contact Information
-  fname: '',
-  lname: '',
-  phone_number: '',
-  email: '',
-  // contact Addresses
-  addresses: [{ ...DEFAULT_ADDRESS }],
-});
-const v$ = useVuelidate(formRules, form);
+const v$ = useVuelidate(formRules, form.value);
 
 const addAddress = () => {
-  form.addresses.push({ ...DEFAULT_ADDRESS });
+  form.value.addresses.push({ ...DEFAULT_ADDRESS });
 };
 const removeAddress = (index) => {
-  form.addresses.splice(index, 1);
+  form.value.addresses.splice(index, 1);
 };
 const handleDefaultChange = (type, index) => {
   const key = type === 'billing' ? 'is_default_billing' : 'is_default_shipping';
-  form.addresses.forEach((address, i) => {
+  form.value.addresses.forEach((address, i) => {
     if (i !== index) {
       address[key] = false;
     }

@@ -7,24 +7,21 @@
     size="lg"
   >
     <BaseFormGroup>
-      <BaseSearchSelect
+      <BaseMultiSelect
         v-model="selectedMsicCode"
         placeholder="Type in 5-digit MSIC code or describe your business activity here..."
         :options="groupedOptions[4]"
-        label="code"
-        track-by="code"
-        :custom-label="({ code, description }) => `${code}-${description}`"
-        open-direction="bottom"
+        label="c_description"
       />
     </BaseFormGroup>
 
     <BaseFormGroup label="Selected MSIC Code" class="pt-5">
-      <BaseSearchSelect
+      <BaseMultiSelect
         v-for="i in 5"
         :key="i"
         :class="`msic-code-split-${i} mb-5`"
         v-model="selectedMsicCodeSplit[i - 1]"
-        @change="handleMsicCodeSplitChange(i - 1)"
+        @option:selected="handleMsicCodeSplitChange(i - 1)"
         :options="
           groupedOptions[i - 1]?.filter((item) =>
             i > 1
@@ -32,10 +29,7 @@
               : !item.parent_code
           )
         "
-        label="code"
-        track-by="code"
-        :custom-label="({ code, description }) => `${code}-${description}`"
-        open-direction="bottom"
+        label="c_description"
       />
     </BaseFormGroup>
     <template #footer>
@@ -64,7 +58,12 @@ const props = defineProps({
 const emit = defineEmits(['change']);
 
 const groupedOptions = computed(() =>
-  props.msicCodes.reduce((acc, curr) => {
+  props.msicCodes
+  .map(m => ({
+    ...m,
+    c_description: `${m.code}-${m.description}`
+  }))
+  .reduce((acc, curr) => {
     const key = curr.parent_code ? curr.parent_code.length : 0;
     if (!acc[key]) {
       acc[key] = [];

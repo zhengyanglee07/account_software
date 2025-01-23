@@ -73,7 +73,7 @@ return [
 
     'wildcard_ip' => env('APP_WILDCARD_IP', null),
 
-    'cdn' => env('APP_CDN', 'https://media.hypershapes.com'),
+    'cdn' => env('APP_CDN', 'https://media.kcpty.com'),
 
     /*
     |--------------------------------------------------------------------------

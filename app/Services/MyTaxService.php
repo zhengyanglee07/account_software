@@ -31,7 +31,7 @@ class MyTaxService
         }
 
         // Token is missing or expired, renew it
-        // return $this->renewAccessToken();
+        return $this->renewAccessToken();
     }
 
     /**
@@ -66,11 +66,18 @@ class MyTaxService
     /**
      * Make an API call with the access token.
      */
-    public function apiRequest($endpoint, $method = 'GET', $data = [])
+    public function apiRequest($endpoint, $method = 'GET', $data = [], $isJson = false)
     {
         $token = $this->getAccessToken();
 
-        $response = Http::withToken($token)
+
+        $response = $isJson ? Http::withToken($token)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ])
+            ->$method("{$this->baseUrl}/$endpoint", $data) :
+            Http::withToken($token)
             ->$method("{$this->baseUrl}/$endpoint", $data);
 
         // If unauthorized, try renewing the token and retrying the request

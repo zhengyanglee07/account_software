@@ -1,24 +1,14 @@
 <template>
   <BaseModal :modal-id="modalId" no-dismiss title="Taxes" no-padding size="lg">
-    <BaseDatatable
-      title="items"
-      :table-headers="TAX_TABLE_HEADERS"
-      :table-datas="taxList"
-      no-search
-      no-action
-      no-responsive
-    >
+    <BaseDatatable title="items" :table-headers="TAX_TABLE_HEADERS" :table-datas="taxList" no-search no-action
+      no-responsive>
       <template #action-button>
         <BaseButton type="light" @click="addTaxType"> Add Tax Type </BaseButton>
       </template>
 
       <template #cell-taxType="{ index }">
-        <BaseMultiSelect
-          v-model="taxList[index].taxType"
-          :options="taxTypes"
-          label="Description"
-          :reduce="(option) => option.Code"
-        />
+        <BaseMultiSelect v-model="taxList[index].taxType" :options="taxTypes" label="Description"
+          :reduce="(option) => option.Code" />
       </template>
 
       <template #cell-numberOfUnits="{ index }">
@@ -54,18 +44,10 @@
 
     <ContactDetail :countries="countries" :states="states" />
     <template #footer>
-      <BaseButton
-        type="light"
-        data-bs-dismiss="modal"
-        @click="cancelAddPeopleProfile"
-      >
+      <BaseButton type="light" data-bs-dismiss="modal" @click="cancelAddPeopleProfile">
         Dismiss
       </BaseButton>
-      <BaseButton
-        id="add-people-button"
-        :disabled="saving"
-        @click="addPeopleProfile"
-      >
+      <BaseButton id="add-people-button" :disabled="saving" @click="save">
         <div v-if="saving">
           <i class="fas fa-circle-notch fa-spin pe-0" />
         </div>
@@ -77,6 +59,7 @@
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { Modal } from 'bootstrap';
 
 const props = defineProps({
   modalId: {
@@ -97,6 +80,8 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['save']);
+
 const TAX_TABLE_HEADERS = [
   { name: 'Tax Type', key: 'taxType', custom: true },
   { name: 'Number of Units', key: 'numberOfUnits', custom: true },
@@ -107,9 +92,12 @@ const TAX_TABLE_HEADERS = [
 
 const taxList = ref(props.itemTaxes);
 
-watch(() => props.itemTaxes, (newVal) => {
-  taxList.value = newVal;
-});
+watch(
+  () => props.itemTaxes,
+  (newVal) => {
+    taxList.value = newVal;
+  }
+);
 
 const taxExempt = reactive({
   reason: '',
@@ -139,7 +127,6 @@ const taxableAmountWithExemption = computed(() => {
 
 const taxExemptedAmount = computed(() => {
   const taxAmountWithoutExemption = taxList.value.reduce((acc, tax) => {
-    console.log(getTaxAmount(taxableAmountWithoutExemption.value, tax),'aaaaaaaaa')
     return acc + getTaxAmount(taxableAmountWithoutExemption.value, tax);
   }, 0);
   const taxAmountWithExemption = taxList.value.reduce((acc, tax) => {
@@ -153,6 +140,30 @@ const getTaxAmount = (taxable, tax) => {
     return taxable * (tax.taxRate / 100);
   }
   return tax.ratePerUnit * tax.numberOfUnits;
+};
+
+const hideModal = () => {
+  Modal.getInstance(document.getElementById(props.modalId)).hide();
+};
+
+const save = () => {
+  const taxes = taxList.value.map((m) => ({
+    ...m,
+    taxAmount: getTaxAmount(taxableAmountWithExemption.value, m),
+  }));
+  taxes.forEach((tax) => {
+    if (tax.taxRate > 0) {
+      delete tax.ratePerUnit;
+      delete tax.numberOfUnits;
+    } else if (tax.ratePerUnit > 0) {
+      delete tax.taxRate;
+    }
+  });
+  emits('save', {
+    taxes,
+    taxExempt,
+  });
+  hideModal();
 };
 </script>
 

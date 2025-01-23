@@ -1,107 +1,67 @@
 <template>
-  <ModalTemplate
-    :id="modalId"
-    :title="modalTitle"
-    :button_title="buttonTitle"
-    @save-button="save"
-  >
-    <template #body>
-      <div class="row">
-        <div
-          class="col-md-12 mb-3"
-          style="padding: 0 !important"
-        >
-          <div class="form-group-prepend">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fas fa-search gray_icon" />
-                </span>
-              </div>
-              <input
-                ref="search"
-                v-model="searchInput"
-                type="text"
-                class="form-control firstInput"
-                :placeholder="'Search Products'"
-              >
+  <BaseModal :modal-id="modalId" :title="modalTitle" :button_title="buttonTitle">
+    <div class="row">
+      <div class="col-md-12 mb-3" style="padding: 0 !important">
+        <div class="form-group-prepend">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-search gray_icon" />
+              </span>
             </div>
+            <input ref="search" v-model="searchInput" type="text" class="form-control firstInput"
+              :placeholder="'Search Products'" />
           </div>
         </div>
       </div>
-      <template v-if="allProducts.length > 0">
-        <template v-if="!filteredItems.length">
-          <div>
-            <span class="flex-center">No results found...</span>
-          </div>
-        </template>
-        <template
-          v-for="(item, index) in filteredItems"
-          :key="index"
-        >
-          <div class="list-group list-group-item list-group-item-action">
-            <div
-              class="row"
-              style="align-items: center"
-              @click="addProduct(item, index)"
-            >
-              <div class="col-1 px-0">
-                <input
-                  :id="`${index}-checkbox`"
-                  type="checkbox"
-                  class="me-1 black-checkbox"
-                  :checked="selected.includes(item.id)"
-                >
-                <span />
-              </div>
-              <div class="col-2 px-0">
-                <span>
-                  <img
-                    :src="
-                      item.productImagePath ||
-                        'https://cdn.hypershapes.com/assets/product-default-image.png'
-                    "
-                    width="40"
-                    height="40"
-                  >
-                </span>
-              </div>
-              <div
-                class="col-5 px-0"
-                style="text-overflow: ellipsis; cursor: pointer"
-              >
-                <span style="padding-left: 2px">{{ item.productTitle }}</span>
-              </div>
-              <!-- <div class="col-2">
+    </div>
+    <template v-if="allProducts.length > 0">
+      <template v-if="!filteredItems.length">
+        <div>
+          <span class="flex-center">No results found...</span>
+        </div>
+      </template>
+      <template v-for="(item, index) in filteredItems" :key="index">
+        <div class="list-group list-group-item list-group-item-action">
+          <div class="row" style="align-items: center" @click="addProduct(item, index)">
+            <div class="col-1 px-0">
+              <input :id="`${index}-checkbox`" type="checkbox" class="me-1 black-checkbox"
+                :checked="selected.includes(item.id)" />
+              <span />
+            </div>
+            <div class="col-2 px-0">
+              <span>
+                <img :src="item.productImagePath ||
+                  'https://cdn.hypershapes.com/assets/product-default-image.png'
+                  " width="40" height="40" />
+              </span>
+            </div>
+            <div class="col-5 px-0" style="text-overflow: ellipsis; cursor: pointer">
+              <span style="padding-left: 2px">{{ item.productTitle }}</span>
+            </div>
+            <!-- <div class="col-2">
                 <span>{{ item.quantity }} available</span>
               </div> -->
-              <div
-                class="col-2 px-0"
-                style="text-align: right"
-              >
-                <span>{{ currency === 'MYR' ? 'RM' : currency }}
-                  {{ item.productPrice }}
-                </span>
-              </div>
+            <div class="col-2 px-0" style="text-align: right">
+              <span>{{ currency === 'MYR' ? 'RM' : currency }}
+                {{ item.productPrice }}
+              </span>
             </div>
           </div>
-        </template>
-      </template>
-      <template v-else>
-        <div class="wrapper">
-          <span
-            class="flex-center"
-            style="color: grey"
-          >No product yet...</span>
-          <a
-            class="flex-center h_link"
-            style="font-size: 1rem"
-            href="/product/create"
-          >Click here to Create Product</a>
         </div>
       </template>
     </template>
-  </ModalTemplate>
+    <template v-else>
+      <div class="wrapper">
+        <span class="flex-center" style="color: grey">No product yet...</span>
+        <a class="flex-center h_link" style="font-size: 1rem" href="/product/create">Click here to Create Product</a>
+      </div>
+    </template>
+
+    <template #footer>
+      <BaseButton data-bs-dismiss="modal" @click="save"> Save </BaseButton>
+    </template>
+  </BaseModal>
 </template>
 
 <script>
@@ -163,7 +123,7 @@ export default {
       });
       this.$emit('save', this.selected);
       this.searchInput = '';
-      Modal.getInstance(document.getElementById('browseProductModal')).hide();
+      Modal.getInstance(document.getElementById(this.modalId)).hide();
     },
 
     addProduct(item, index) {
@@ -180,5 +140,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
