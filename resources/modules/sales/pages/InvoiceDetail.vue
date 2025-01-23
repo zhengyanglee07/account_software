@@ -131,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, inject } from 'vue';
+import { ref, reactive, watch, computed, inject, onMounted } from 'vue';
 import BaseOrderPageLayout from '@shared/layout/BaseOrderPageLayout.vue';
 import ContactDetailModal from '@people/components/ContactDetailModal.vue';
 import ItemTaxModal from '@product/components/ItemTaxModal.vue';
@@ -399,5 +399,7 @@ const submitDocument = () => {
 };
 
 // temp for init
-selectItems([props.items[0].id]);
+onMounted(() => {
+  selectItems([props.items[0].id]);
+})
 </script>
