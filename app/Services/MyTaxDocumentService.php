@@ -825,6 +825,53 @@ class MyTaxDocumentService
                     ]
                 ];
             }
+
+            if (count($invoiceLineElement['TaxTotal'][0]['TaxSubtotal']) == 0) {
+                $invoiceLineElement['TaxTotal'][0]['TaxSubtotal'][] = [
+                    'TaxAmount' => [
+                        [
+                            '_' => 0,
+                            'currencyID' => $data['currency_code']
+                        ]
+                    ],
+                    'TaxCategory' => [
+                        [
+                            'ID' => [
+                                [
+                                    '_' => 'E',
+                                ]
+                            ],
+                            'Percent' => [
+                                [
+                                    '_' => 0
+                                ]
+                            ],
+                            'TaxExemptionReason' => [
+                                [
+                                    '_' => 'No Tax'
+                                ]
+                            ],
+                            'TaxScheme' => [
+                                [
+                                    'ID' => [
+                                        [
+                                            'schemeAgencyID' => '6',
+                                            'schemeID' => "UN/ECE 5153",
+                                            '_' => 'OTH'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'TaxableAmount' => [
+                        [
+                            '_' => 0,
+                            'currencyID' => $data['currency_code']
+                        ]
+                    ]
+                ];
+            }
             $invoiceLineElement['TaxTotal'][0]['TaxAmount'][0]['_'] = $totalTaxAmount;
             $this->document['AllowanceCharge'][] = $invoiceLineElement['AllowanceCharge'][0];
             $this->document['InvoiceLine'][] = $invoiceLineElement;
@@ -1074,100 +1121,100 @@ class MyTaxDocumentService
 
     public function setDocument($data)
     {
-        $data = [
-            'supplier' => [
-                'address' => [
-                    'city_name' => 'RAWANG',
-                    'postal_zone' => '48000',
-                    'state_code' => '10',
-                    'address_line_1' => '5570 JALAN NGP 1/1',
-                    'address_line_2' => 'TAMAN JIJAU',
-                    'address_line_3' => '',
-                    'country_code' => 'MYS'
-                ],
-                'registration_name' => 'LEE ZHENG YANG',
-                'contact_no' => '601123861608',
-                'email' => 'zhengyangz1007@gmail.com',
-                'msic_code' => '95122',
-                'msic_code_description' => 'Repair and maintenance of cellular phones',
-                'tax_id_no' => 'IG50668341090',
-                'reg_no' => '011007101175',
-                'reg_no_type' => 'NRIC',
-                'sst_reg_no' => '',
-                'tourism_tax_reg_no' => ''
-            ],
-            'buyer' => [
-                'address' => [
-                    'city_name' => 'KLUANG',
-                    'postal_zone' => '86000',
-                    'state_code' => '01',
-                    'address_line_1' => '19,JALAN SURIA 4/1,TAMAN PURNAMA',
-                    'address_line_2' => '',
-                    'address_line_3' => '',
-                    'country_code' => 'MYS'
-                ],
-                'registration_name' => 'CHONG JING ZE',
-                'contact_no' => '0137679611',
-                'email' => 'cjzchong1@gmail.com',
-                'tax_id_no' => 'IG29222558100',
-                'reg_no' => '970412016429',
-                'reg_no_type' => 'NRIC',
-                'sst_reg_no' => 'N/A'
-            ],
-            'invoice_number' => '2452104785881',
-            'typeCode' => '01', //Invoice
-            'version' => '1.1',
-            'source_currency_code' => 'MYR',
-            'currency_code' => 'MYR',
-            'tax_exchange_rate' => [
-                'calculation_rate' => 0,
-            ],
-            'invoice_period' => [
-                'description' => '',
-                'start_date' => '',
-                'end_date' => ''
-            ],
-            'payment_mode' => '01',
-            'supplier_bank_account_number' => '',
-            'invoice_line' => [
-                [
-                    'id' => '1',
-                    'quantity' => 1,
-                    'unit_code' => 'XUN', // https://sdk.myinvois.hasil.gov.my/codes/unit-types/
-                    'commodity_classification_code' => '030', //https://sdk.myinvois.hasil.gov.my/codes/classification-codes/
-                    'description' => 'Software Development',
-                    'origin_country' => '',
-                    'currency_code' => 'MYR',
-                    'taxes' => [
-                        [
-                            'tax_type' => '01', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
-                            'per_unit_amount' => 5.00,
-                            'number_of_unit' => 1,
-                        ],
-                        [
-                            'tax_type' => '02', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
-                            'tax_rate' => 0.50,
-                        ],
-                    ],
-                    'tax_exemption' => [
-                        'reason' => '',
-                        'amount' => 0,
-                    ],
-                    'unit_price' => 100.00,
-                    'discount' => [
-                        'reason' => '',
-                        'amount' => 0,
-                        'rate' => 0
-                    ],
-                    'fee_or_charge' => [
-                        'reason' => '',
-                        'amount' => 0,
-                        'rate' => 0
-                    ]
-                ]
-            ],
-            'is_rounding_adjustment' => false,
-        ];
+        // $data = [
+        //     'supplier' => [
+        //         'address' => [
+        //             'city_name' => 'RAWANG',
+        //             'postal_zone' => '48000',
+        //             'state_code' => '10',
+        //             'address_line_1' => '5570 JALAN NGP 1/1',
+        //             'address_line_2' => 'TAMAN JIJAU',
+        //             'address_line_3' => '',
+        //             'country_code' => 'MYS'
+        //         ],
+        //         'registration_name' => 'LEE ZHENG YANG',
+        //         'contact_no' => '601123861608',
+        //         'email' => 'zhengyangz1007@gmail.com',
+        //         'msic_code' => '95122',
+        //         'msic_code_description' => 'Repair and maintenance of cellular phones',
+        //         'tax_id_no' => 'IG50668341090',
+        //         'reg_no' => '011007101175',
+        //         'reg_no_type' => 'NRIC',
+        //         'sst_reg_no' => '',
+        //         'tourism_tax_reg_no' => ''
+        //     ],
+        //     'buyer' => [
+        //         'address' => [
+        //             'city_name' => 'KLUANG',
+        //             'postal_zone' => '86000',
+        //             'state_code' => '01',
+        //             'address_line_1' => '19,JALAN SURIA 4/1,TAMAN PURNAMA',
+        //             'address_line_2' => '',
+        //             'address_line_3' => '',
+        //             'country_code' => 'MYS'
+        //         ],
+        //         'registration_name' => 'CHONG JING ZE',
+        //         'contact_no' => '0137679611',
+        //         'email' => 'cjzchong1@gmail.com',
+        //         'tax_id_no' => 'IG29222558100',
+        //         'reg_no' => '970412016429',
+        //         'reg_no_type' => 'NRIC',
+        //         'sst_reg_no' => 'N/A'
+        //     ],
+        //     'invoice_number' => '2452104785881',
+        //     'typeCode' => '01', //Invoice
+        //     'version' => '1.1',
+        //     'source_currency_code' => 'MYR',
+        //     'currency_code' => 'MYR',
+        //     'tax_exchange_rate' => [
+        //         'calculation_rate' => 0,
+        //     ],
+        //     'invoice_period' => [
+        //         'description' => '',
+        //         'start_date' => '',
+        //         'end_date' => ''
+        //     ],
+        //     'payment_mode' => '01',
+        //     'supplier_bank_account_number' => '',
+        //     'invoice_line' => [
+        //         [
+        //             'id' => '1',
+        //             'quantity' => 1,
+        //             'unit_code' => 'XUN', // https://sdk.myinvois.hasil.gov.my/codes/unit-types/
+        //             'commodity_classification_code' => '030', //https://sdk.myinvois.hasil.gov.my/codes/classification-codes/
+        //             'description' => 'Software Development',
+        //             'origin_country' => '',
+        //             'currency_code' => 'MYR',
+        //             'taxes' => [
+        //                 [
+        //                     'tax_type' => '01', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
+        //                     'per_unit_amount' => 5.00,
+        //                     'number_of_unit' => 1,
+        //                 ],
+        //                 [
+        //                     'tax_type' => '02', //https://sdk.myinvois.hasil.gov.my/codes/tax-types/
+        //                     'tax_rate' => 0.50,
+        //                 ],
+        //             ],
+        //             'tax_exemption' => [
+        //                 'reason' => '',
+        //                 'amount' => 0,
+        //             ],
+        //             'unit_price' => 100.00,
+        //             'discount' => [
+        //                 'reason' => '',
+        //                 'amount' => 0,
+        //                 'rate' => 0
+        //             ],
+        //             'fee_or_charge' => [
+        //                 'reason' => '',
+        //                 'amount' => 0,
+        //                 'rate' => 0
+        //             ]
+        //         ]
+        //     ],
+        //     'is_rounding_adjustment' => false,
+        // ];
 
         $this->setSupplier($data['supplier']);
         $this->setBuyerElement($data['buyer']);
@@ -1251,13 +1298,11 @@ class MyTaxDocumentService
                     $totalAllowanceAmount = $this->priceCalculator([$totalAllowanceAmount, '+', $allowance['Amount'][0]['_']]);
             }
             foreach ($line['TaxTotal'][0]['TaxSubtotal'] as $subTax) {
-                if ($subTax['TaxAmount'][0]['_'] > 0) {
                     $taxSubTotal[] = [
                         'TaxAmount' => $subTax['TaxAmount'],
                         'TaxCategory' => $subTax['TaxCategory'],
                         'TaxableAmount' => $subTax['TaxableAmount'],
                     ];
-                }
             }
         }
 

@@ -112,8 +112,8 @@ class SalesController extends Controller
                     'city_name' => $accoutBilling['city'],
                     'postal_zone' => $accoutBilling['zip'],
                     'state_code' => $accoutBilling['state'],
-                    'address_line_1' => $accoutBilling['address1'],
-                    'address_line_2' => $accoutBilling['address2'],
+                    'address_line_1' => $accoutBilling['address1'] ?? '',
+                    'address_line_2' => $accoutBilling['address2'] ?? '',
                     'address_line_3' => '',
                     'country_code' => $accoutBilling['country_code']
                 ],
@@ -133,8 +133,8 @@ class SalesController extends Controller
                     'city_name' => $contactBilling->city,
                     'postal_zone' => $contactBilling->zip,
                     'state_code' => $contactBilling->state_code,
-                    'address_line_1' => $contactBilling->address1,
-                    'address_line_2' => $contactBilling->address2,
+                    'address_line_1' => $contactBilling->address1 ?? '',
+                    'address_line_2' => $contactBilling->address2 ?? '',
                     'address_line_3' => '',
                     'country_code' => $contactBilling->country
                 ],
@@ -203,11 +203,11 @@ class SalesController extends Controller
 
         foreach ($formData['form_items'] as $key => $item) {
             $data['invoice_line'][$key] = [
-                'id' => $key + 1,
+                'id' => (string)($key + 1),
                 'quantity' => $item['quantity'] ?? 0,
                 'unit_code' => $item['unit_type'] ?? '',
                 'commodity_classification_code' => $item['classification_code'] ?? '',
-                'description' => $item['description'] ?? '',
+                'description' => $item['description'] ?? 'nothing',
                 'origin_country' => $item['origin_country'] ?? 'MYS',
                 'currency_code' => $formData['currency_code'],
                 'tax_exemption' => [
